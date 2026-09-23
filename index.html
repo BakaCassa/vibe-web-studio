@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wei Lun Chien | Personal Homepage</title>
+  
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Google Fonts: Retro Pixel & Monospace & TC Readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'y2k-bg': '#0c071e',
+            'y2k-card': '#160d33',
+            'y2k-cyan': '#00f3ff',
+            'y2k-pink': '#ff007f',
+            'y2k-green': '#39ff14',
+            'y2k-yellow': '#ffe600',
+            'y2k-win-gray': '#c3c7cb',
+            'y2k-win-blue': '#000080',
+          },
+          fontFamily: {
+            pixel: ['"Press Start 2P"', 'monospace'],
+            vt: ['"VT323"', 'monospace'],
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Retro CRT scanlines overlay */
+    .scanlines {
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.03),
+        rgba(0, 255, 0, 0.01),
+        rgba(0, 0, 255, 0.03)
+      );
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    /* Pixel Art Box Shadow (Chunky 90s feel) */
+    .pixel-box {
+      box-shadow: 4px 4px 0px #000000;
+    }
+    .pixel-box-cyan {
+      box-shadow: 4px 4px 0px #00f3ff;
+    }
+    .pixel-box-pink {
+      box-shadow: 4px 4px 0px #ff007f;
+    }
+    .pixel-box-yellow {
+      box-shadow: 4px 4px 0px #ffe600;
+    }
+
+    /* Windows 98 Beveled Edges */
+    .win98-window {
+      background: #c3c7cb;
+      box-shadow: inset -2px -2px #0a0a0a, inset 2px 2px #fff, inset -4px -4px #808080, inset 4px 4px #dfdfdf, 6px 6px 0px rgba(0, 0, 0, 0.6);
+    }
+    .win98-titlebar {
+      background: linear-gradient(90deg, #000080, #1084d0);
+    }
+    .win98-btn {
+      box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+    }
+    .win98-btn:active {
+      box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf;
+    }
+
+    /* Pixel Button */
+    .pixel-btn {
+      position: relative;
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0px #000;
+      transition: all 0.08s ease;
+    }
+    .pixel-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #000;
+    }
+    .pixel-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #000;
+    }
+
+    /* Blinking Caret & Glowing Text */
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 0.8s infinite;
+    }
+
+    /* Cyber grid background */
+    .cyber-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 243, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 0, 127, 0.07) 1px, transparent 1px);
+    }
+
+    /* Marquee animation */
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .animate-marquee {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* CRT flicker subtle animation */
+    @keyframes crt-flicker {
+      0% { opacity: 0.98; }
+      50% { opacity: 1; }
+      100% { opacity: 0.99; }
+    }
+    .crt-glow {
+      animation: crt-flicker 0.15s infinite;
+    }
+
+    /* Custom retro scrollbar */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c071e;
+      border-left: 2px solid #ff007f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00f3ff;
+      border: 2px solid #000;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ffe600;
+    }
+  </style>
+</head>
+<body class="bg-y2k-bg text-white font-sans min-h-screen cyber-grid crt-glow relative overflow-x-hidden selection:bg-y2k-pink selection:text-white">
+
+  <!-- CRT Scanline Effect (Non-blocking) -->
+  <div class="fixed inset-0 scanlines z-50 pointer-events-none"></div>
+
+  <!-- Y2K Retro Top Marquee Banner -->
+  <div class="bg-black border-b-2 border-y2k-pink text-y2k-yellow font-vt text-lg md:text-xl py-1 overflow-hidden sticky top-0 z-40 shadow-lg">
+    <div class="animate-marquee">
+      👾 [SYSTEM STATUS: ONLINE] ✦ WELCOME TO WEI LUN CHIEN'S HOMEPAGE ✦ 大同大學資訊工程學系 ✦ 專長工具: CHATGPT & GEMINI ✦ 動漫小說 ✕ 遊戲創作 ✕ 格鬥遊戲 ✕ 文字冒險 ✦ LOW-PROFILE & HIGH-IQ WARRIOR 👾
+    </div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="max-w-5xl mx-auto px-4 pt-4 pb-2">
+    <nav class="win98-window p-2 rounded-none border-2 border-black flex flex-wrap items-center justify-between gap-3">
+      <!-- Title Bar Icon & Identity -->
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-4 h-4 bg-y2k-pink border border-black shadow-[1px_1px_0_#fff]"></span>
+        <span class="font-pixel text-xs text-black tracking-wider">WEI_LUN_CHIEN.EXE</span>
+      </div>
+
+      <!-- Sound Toggle + Nav Links -->
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <button id="soundToggleBtn" onclick="toggleAudio()" class="win98-btn px-2 py-1 text-xs font-pixel text-black bg-[#d4d0c8] flex items-center gap-1 hover:bg-white" title="切換 8-bit 音效">
+          <span id="soundIcon">🔊</span> <span class="hidden sm:inline">SFX: ON</span>
+        </button>
+
+        <a href="#hero" onclick="playBeep(440)" class="win98-btn px-3 py-1 text-xs font-pixel text-black bg-[#d4d0c8] hover:bg-y2k-cyan hover:text-black transition">
+          Home
+        </a>
+
+        <button onclick="openComingSoon('News')" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-yellow transition flex items-center gap-1">
+          News <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
+        </button>
+
+        <button onclick="openComingSoon('Tools')" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-green transition flex items-center gap-1">
+          Tools <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
+        </button>
+
+        <button onclick="openComingSoon('Games')" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-pink hover:text-white transition flex items-center gap-1">
+          Games <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-12">
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative">
+      <div class="border-4 border-black bg-y2k-card p-4 sm:p-6 pixel-box-cyan relative overflow-hidden">
+        
+        <!-- Y2K Hologram Ribbon -->
+        <div class="absolute -right-12 top-6 bg-y2k-yellow text-black font-pixel text-[10px] py-1 px-14 rotate-45 border-2 border-black font-bold uppercase shadow-md select-none">
+          VER 2026.1
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
+          
+          <!-- Character Avatar Window -->
+          <div class="md:col-span-5 flex flex-col items-center">
+            <div class="win98-window p-2 w-full max-w-[280px] sm:max-w-[320px]">
+              <div class="win98-titlebar px-2 py-1 flex justify-between items-center mb-2">
+                <span class="text-white font-pixel text-[10px] tracking-wide truncate">AVATAR_PREVIEW.BMP</span>
+                <div class="flex gap-1">
+                  <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold">_</span>
+                  <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold">X</span>
+                </div>
+              </div>
+              
+              <!-- Photo Container with retro border -->
+              <div class="relative border-2 border-black bg-black overflow-hidden group">
+                <img 
+                  src="cdv_photo_17901345531.jpg" 
+                  alt="Wei Lun Chien 個人照片" 
+                  class="w-full h-auto aspect-[3/4] object-cover filter contrast-105 saturate-110 transition duration-300 group-hover:scale-105"
+                  onerror="this.onerror=null; this.src='https://placehold.co/400x533/160d33/00f3ff?text=Wei+Lun+Chien';"
+                />
+                <!-- Pixel Grid Mask Over Photo -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[10px] font-pixel text-y2k-cyan">
+                  <span>CHAR: CHIEN</span>
+                  <span class="text-y2k-green">HP: 100/100</span>
+                </div>
+              </div>
+              
+              <!-- 8-Bit Status Bar Under Avatar -->
+              <div class="mt-2 bg-black p-2 border border-gray-600 text-xs font-vt text-y2k-green space-y-1">
+                <div class="flex justify-between">
+                  <span>INTEL (IQ): HIGH</span>
+                  <span>ATTR: LOW-KEY</span>
+                </div>
+                <div class="w-full bg-gray-800 h-2 border border-gray-600">
+                  <div class="bg-y2k-green h-full w-[95%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Identity & RPG Info Card -->
+          <div class="md:col-span-7 space-y-4">
+            <div class="inline-block bg-y2k-pink text-white font-pixel text-xs px-3 py-1 border-2 border-black pixel-box">
+              PLAYER 1 READY
+            </div>
+            
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-pixel tracking-wider leading-tight text-transparent bg-clip-text bg-gradient-to-r from-y2k-cyan via-white to-y2k-pink drop-shadow-[2px_2px_0px_#000]">
+              Wei Lun Chien
+            </h1>
+
+            <div class="border-l-4 border-y2k-yellow pl-3 py-1">
+              <p class="font-vt text-2xl sm:text-3xl text-y2k-yellow tracking-wide leading-none">
+                大同大學資訊工程學系
+              </p>
+              <p class="text-xs sm:text-sm text-gray-300 font-mono mt-1">
+                (2026 年迄今 ✦ 預計於 2028 年 7 月畢業)
+              </p>
+            </div>
+
+            <!-- RPG Parameter Windows -->
+            <div class="grid grid-cols-2 gap-2 pt-1 font-vt text-lg">
+              <div class="bg-black/60 border border-y2k-cyan/60 p-2.5">
+                <span class="text-y2k-cyan block text-xs font-pixel mb-1">【善用工具】</span>
+                <span class="text-white text-xl">ChatGPT ✦ Gemini</span>
+              </div>
+              <div class="bg-black/60 border border-y2k-pink/60 p-2.5">
+                <span class="text-y2k-pink block text-xs font-pixel mb-1">【態度特質】</span>
+                <span class="text-white text-xl">高智商 ✦ 低調謙遜</span>
+              </div>
+            </div>
+
+            <!-- Interests Badges (Strictly from Profile) -->
+            <div class="pt-2">
+              <span class="text-xs font-pixel text-gray-400 block mb-2">★ 關注與興趣 FOCUS & INTERESTS</span>
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span class="border-2 border-black bg-purple-900/90 text-purple-200 px-2.5 py-1 pixel-box font-medium">動漫小說</span>
+                <span class="border-2 border-black bg-pink-900/90 text-pink-200 px-2.5 py-1 pixel-box font-medium">遊戲創作</span>
+                <span class="border-2 border-black bg-red-900/90 text-red-200 px-2.5 py-1 pixel-box font-medium">格鬥遊戲</span>
+                <span class="border-2 border-black bg-blue-900/90 text-blue-200 px-2.5 py-1 pixel-box font-medium">文字類冒險遊戲</span>
+              </div>
+            </div>
+
+            <!-- Hero Action Buttons -->
+            <div class="flex flex-wrap gap-3 pt-3">
+              <a href="#about" onclick="playBeep(520)" class="pixel-btn bg-y2k-cyan text-black px-4 py-2 font-pixel text-xs flex items-center gap-2 font-bold hover:bg-white">
+                <span>📖</span> 查看個人簡介
+              </a>
+              <button onclick="openContactModal()" class="pixel-btn bg-y2k-pink text-white px-4 py-2 font-pixel text-xs flex items-center gap-2 font-bold hover:bg-yellow-300 hover:text-black">
+                <span>✉️</span> 聯絡我 (CONTACT)
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION (RPG / Text Adventure Style) -->
+    <section id="about" class="space-y-3">
+      <!-- Section Header -->
+      <div class="flex items-center gap-3">
+        <span class="w-4 h-4 bg-y2k-cyan inline-block border-2 border-black"></span>
+        <h2 class="font-pixel text-lg sm:text-xl text-y2k-cyan tracking-wider">ABOUT // 個人簡介</h2>
+        <div class="flex-1 h-0.5 bg-gradient-to-r from-y2k-cyan to-transparent"></div>
+      </div>
+
+      <!-- Retro RPG Text Adventure Window -->
+      <div class="border-4 border-black bg-[#0d0922] p-5 sm:p-7 pixel-box-pink relative">
+        <div class="flex items-center justify-between border-b-2 border-purple-900/80 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="font-pixel text-xs text-y2k-yellow">QUEST_LOG // BIOGRAPHY</span>
+          </div>
+          <span class="font-vt text-xl text-gray-400">MODE: TEXT ADVENTURE</span>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div class="bg-black/80 border-2 border-gray-700 p-4 sm:p-6 relative">
+          <div class="flex items-start gap-4">
+            <!-- Retro NPC Face Icon -->
+            <div class="hidden sm:flex flex-col items-center bg-gray-900 border border-y2k-pink p-2 shrink-0">
+              <span class="text-3xl">🧙‍♂️</span>
+              <span class="font-pixel text-[8px] text-y2k-pink mt-1">CHIEN</span>
+            </div>
+
+            <!-- Verbatim Profile Content -->
+            <div class="space-y-4 flex-1">
+              <div class="font-pixel text-xs text-y2k-green flex items-center gap-2">
+                <span>▶ SPEAKER: Wei Lun Chien</span>
+              </div>
+              
+              <!-- Strict Biography Paragraph -->
+              <p class="text-base sm:text-lg leading-relaxed sm:leading-loose text-gray-100 font-sans tracking-wide">
+                Wei Lun Chien 目前就讀於大同大學資訊工程學系（2026 年迄今，預計於 2028 年 7 月畢業）。個人的專長與善用工具為 ChatGPT 以及 Gemini。在個人特質與態度上，具備高智商，並秉持低調、謙遜有禮的處事原則。目前對於動漫小說與遊戲創作抱有高度興趣，平時亦喜愛格鬥遊戲和文字類冒險遊戲。
+                <span class="inline-block w-2.5 h-5 bg-y2k-cyan align-middle ml-1 cursor-blink"></span>
+              </p>
+
+              <!-- RPG Action Choice Pills -->
+              <div class="pt-2 border-t border-gray-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-gray-400">
+                <span>[SPACE] 繼續對話 ✦ [ESC] 關閉日誌</span>
+                <span class="text-y2k-yellow font-pixel text-[10px] animate-pulse">▼ PRESS TO INTERACT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TOOLS & SPECIALTIES (Y2K / RPG Inventory Equipment) -->
+    <section id="tools" class="space-y-3">
+      <!-- Section Header -->
+      <div class="flex items-center gap-3">
+        <span class="w-4 h-4 bg-y2k-green inline-block border-2 border-black"></span>
+        <h2 class="font-pixel text-lg sm:text-xl text-y2k-green tracking-wider">SPECIALTIES // 專長與工具</h2>
+        <div class="flex-1 h-0.5 bg-gradient-to-r from-y2k-green to-transparent"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Inventory Item 1: ChatGPT -->
+        <div class="win98-window p-3 border-2 border-black">
+          <div class="win98-titlebar px-2 py-1 flex justify-between items-center mb-3">
+            <span class="text-white font-pixel text-xs">EQUIP_SLOT_01.DAT</span>
+            <span class="text-yellow-300 font-pixel text-[10px]">TIER: S</span>
+          </div>
+
+          <div class="bg-black p-4 border border-gray-700 space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-emerald-950 border-2 border-emerald-400 flex items-center justify-center text-2xl shadow-[2px_2px_0px_#000]">
+                🤖
+              </div>
+              <div>
+                <h3 class="font-pixel text-base text-y2k-green">ChatGPT</h3>
+                <span class="font-vt text-lg text-gray-300">善用工具 ✦ 個人專長</span>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 text-xs text-gray-300 font-sans border-t border-gray-800 pt-2">
+              <div class="flex justify-between">
+                <span class="text-gray-400">類型分類：</span>
+                <span class="text-white font-mono">人工智慧協作與邏輯推論</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">熟練配置：</span>
+                <span class="text-y2k-green font-mono">PRIMARY TOOL</span>
+              </div>
+            </div>
+
+            <div class="w-full bg-gray-900 border border-gray-700 h-3 p-0.5">
+              <div class="bg-emerald-400 h-full w-[100%]"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inventory Item 2: Gemini -->
+        <div class="win98-window p-3 border-2 border-black">
+          <div class="win98-titlebar px-2 py-1 flex justify-between items-center mb-3">
+            <span class="text-white font-pixel text-xs">EQUIP_SLOT_02.DAT</span>
+            <span class="text-yellow-300 font-pixel text-[10px]">TIER: S</span>
+          </div>
+
+          <div class="bg-black p-4 border border-gray-700 space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-cyan-950 border-2 border-y2k-cyan flex items-center justify-center text-2xl shadow-[2px_2px_0px_#000]">
+                💎
+              </div>
+              <div>
+                <h3 class="font-pixel text-base text-y2k-cyan">Gemini</h3>
+                <span class="font-vt text-lg text-gray-300">善用工具 ✦ 個人專長</span>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 text-xs text-gray-300 font-sans border-t border-gray-800 pt-2">
+              <div class="flex justify-between">
+                <span class="text-gray-400">類型分類：</span>
+                <span class="text-white font-mono">多元模型協作與資訊整合</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">熟練配置：</span>
+                <span class="text-y2k-cyan font-mono">ACTIVE COMPANION</span>
+              </div>
+            </div>
+
+            <div class="w-full bg-gray-900 border border-gray-700 h-3 p-0.5">
+              <div class="bg-y2k-cyan h-full w-[100%]"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Character Traits & Interests Deck (Strictly Profile Data) -->
+      <div class="border-2 border-black bg-black/70 p-4 pixel-box-yellow mt-4">
+        <div class="font-pixel text-xs text-y2k-yellow mb-3 flex items-center gap-2">
+          <span>⚔️ ATTRIBUTES & INTERESTS // 個人特質與熱愛領域</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-center text-xs">
+          
+          <div class="bg-gray-900/90 border border-gray-700 p-2 hover:border-y2k-yellow transition">
+            <div class="text-xl mb-1">🧠</div>
+            <div class="font-bold text-white">高智商</div>
+            <div class="text-[10px] text-gray-400 font-vt">INTELLIGENCE</div>
+          </div>
+
+          <div class="bg-gray-900/90 border border-gray-700 p-2 hover:border-y2k-yellow transition">
+            <div class="text-xl mb-1">🤝</div>
+            <div class="font-bold text-white">謙遜有禮</div>
+            <div class="text-[10px] text-gray-400 font-vt">POLITE</div>
+          </div>
+
+          <div class="bg-gray-900/90 border border-gray-700 p-2 hover:border-y2k-yellow transition">
+            <div class="text-xl mb-1">🛡️</div>
+            <div class="font-bold text-white">低調處事</div>
+            <div class="text-[10px] text-gray-400 font-vt">LOW-PROFILE</div>
+          </div>
+
+          <div class="bg-gray-900/90 border border-gray-700 p-2 hover:border-y2k-yellow transition">
+            <div class="text-xl mb-1">📚</div>
+            <div class="font-bold text-white">動漫小說</div>
+            <div class="text-[10px] text-gray-400 font-vt">NOVEL & ANIME</div>
+          </div>
+
+          <div class="bg-gray-900/90 border border-gray-700 p-2 hover:border-y2k-yellow transition">
+            <div class="text-xl mb-1">🎮</div>
+            <div class="font-bold text-white">遊戲創作</div>
+            <div class="text-[10px] text-gray-400 font-vt">GAME CREATION</div>
+          </div>
+
+          <div class="bg-gray-900/90 border border-gray-700 p-2 hover:border-y2k-yellow transition">
+            <div class="text-xl mb-1">🕹️</div>
+            <div class="font-bold text-white">格鬥/文字冒險</div>
+            <div class="text-[10px] text-gray-400 font-vt">FTG & AVG</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN CTA SECTION -->
+    <section id="contact-cta" class="text-center py-6">
+      <div class="win98-window p-6 sm:p-8 max-w-2xl mx-auto border-4 border-black relative">
+        <div class="win98-titlebar px-2 py-1 text-left mb-4 flex items-center justify-between">
+          <span class="text-white font-pixel text-xs">TRANSMIT_MESSAGE.EXE</span>
+          <div class="flex gap-1">
+            <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold">X</span>
+          </div>
+        </div>
+
+        <div class="bg-black/90 p-6 border-2 border-gray-700 space-y-4 text-center">
+          <h2 class="text-2xl sm:text-3xl font-pixel text-y2k-pink drop-shadow-[2px_2px_0px_#000]">
+            CONNECT WITH ME
+          </h2>
+          <p class="text-sm sm:text-base text-gray-300 max-w-md mx-auto">
+            若您對動漫小說、遊戲創作或 AI 協作應用有任何交流想法，歡迎隨時傳遞訊息！
+          </p>
+
+          <div class="pt-2">
+            <!-- Main CTA Pixel Button -->
+            <button 
+              onclick="openContactModal()" 
+              class="pixel-btn bg-y2k-yellow text-black font-pixel text-sm sm:text-base px-8 py-3.5 tracking-wider hover:bg-white hover:text-black inline-flex items-center gap-3 font-bold"
+            >
+              <span>✉️</span> 聯絡我 / CONTACT ME <span>⚡</span>
+            </button>
+          </div>
+
+          <p class="text-xs text-gray-400 font-mono">
+            STATUS: 2026-PRESENT @ 大同大學資訊工程學系
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- RETRO FOOTER -->
+  <footer class="border-t-4 border-black bg-black text-gray-300 py-8 px-4 mt-16 font-mono text-xs">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <!-- Identity & Copyright -->
+      <div class="space-y-1.5 text-center md:text-left">
+        <div class="font-pixel text-xs text-y2k-cyan">Wei Lun Chien | 個人首頁</div>
+        <div class="text-gray-400">大同大學資訊工程學系（預計於 2028 年 7 月畢業）</div>
+        <div class="text-[11px] text-gray-500">© 2026 Wei Lun Chien. All Rights Reserved.</div>
+      </div>
+
+      <!-- Retro Web Badges & Visitor Counter -->
+      <div class="flex flex-col items-center md:items-end gap-2">
+        <!-- 90s Web Counter -->
+        <div class="border-2 border-black bg-gray-900 px-3 py-1 font-vt text-lg flex items-center gap-2 pixel-box">
+          <span class="text-gray-400 text-xs font-pixel">VISITOR NO:</span>
+          <span class="text-y2k-green font-bold tracking-widest text-xl bg-black px-2 border border-gray-700">0001337</span>
+        </div>
+
+        <!-- 800x600 Badge -->
+        <div class="flex items-center gap-2">
+          <span class="border border-gray-700 bg-gray-800 text-[10px] px-2 py-0.5 text-gray-300">
+            BEST VIEWED IN 800x600
+          </span>
+          <span class="border border-y2k-pink bg-pink-950 text-y2k-pink text-[10px] px-2 py-0.5">
+            MADE WITH Y2K PIXELS
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- MODAL: Coming Soon (News / Tools / Games) -->
+  <div id="comingSoonModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="win98-window w-full max-w-sm border-2 border-black">
+      <div class="win98-titlebar px-2 py-1 flex justify-between items-center">
+        <span id="comingSoonTitle" class="text-white font-pixel text-xs">NOTICE.EXE</span>
+        <button onclick="closeComingSoon()" class="w-4 h-4 bg-gray-300 win98-btn text-[10px] flex items-center justify-center font-bold text-black">✕</button>
+      </div>
+      <div class="p-4 space-y-4 text-black">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">⏳</span>
+          <div>
+            <div id="comingSoonCategory" class="font-pixel text-xs text-y2k-win-blue">CATEGORY</div>
+            <div class="font-bold text-sm text-gray-900 mt-1">此區塊即將推出（Coming Soon）</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-700 bg-white p-2.5 border border-gray-400">
+          目前內容正在精心策劃與建置中，敬請期待後續更新！
+        </p>
+        <div class="text-right">
+          <button onclick="closeComingSoon()" class="win98-btn px-4 py-1 text-xs font-pixel bg-[#d4d0c8] text-black hover:bg-white">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Contact Me -->
+  <div id="contactModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="win98-window w-full max-w-md border-4 border-black pixel-box-pink">
+      <div class="win98-titlebar px-2 py-1 flex justify-between items-center">
+        <span class="text-white font-pixel text-xs">CONTACT_WINDOW.EXE</span>
+        <button onclick="closeContactModal()" class="w-4 h-4 bg-gray-300 win98-btn text-[10px] flex items-center justify-center font-bold text-black">✕</button>
+      </div>
+      <div class="p-5 space-y-4 text-black">
+        <div class="flex items-center gap-3 border-b border-gray-400 pb-3">
+          <span class="text-3xl">📬</span>
+          <div>
+            <h3 class="font-pixel text-xs text-y2k-win-blue">聯絡 Wei Lun Chien</h3>
+            <p class="text-xs text-gray-700">大同大學資訊工程學系</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-3 border-2 border-gray-500 space-y-2 text-xs font-mono">
+          <div>
+            <span class="text-gray-500 block text-[10px]">RECIPIENT:</span>
+            <span class="font-bold text-black text-sm">Wei Lun Chien</span>
+          </div>
+          <div>
+            <span class="text-gray-500 block text-[10px]">AFFILIATION:</span>
+            <span class="text-black">大同大學資訊工程學系 (預計 2028 年 7 月畢業)</span>
+          </div>
+          <div>
+            <span class="text-gray-500 block text-[10px]">PRIMARY FOCUS:</span>
+            <span class="text-black">ChatGPT ✦ Gemini ✦ 遊戲創作 ✦ 動漫小說</span>
+          </div>
+        </div>
+
+        <div id="copyFeedback" class="hidden text-xs text-emerald-800 font-bold bg-emerald-100 p-2 border border-emerald-400 text-center">
+          ✓ 已準備好聯絡管道！
+        </div>
+
+        <div class="flex flex-wrap gap-2 justify-end pt-2">
+          <a href="mailto:contact@example.com?subject=Hello%20Wei%20Lun%20Chien" onclick="handleMailClick()" class="win98-btn px-3 py-1.5 text-xs font-pixel bg-[#000080] text-white hover:bg-blue-800">
+            寄送電子郵件
+          </a>
+          <button onclick="closeContactModal()" class="win98-btn px-3 py-1.5 text-xs font-pixel bg-[#d4d0c8] text-black hover:bg-white">
+            關閉
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Context for 8-bit sound effects (Web Audio API)
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          audioCtx = new AudioContext();
+        }
+      }
+    }
+
+    function playBeep(freq = 440, type = 'square', duration = 0.08) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Fallback silently if audio context is blocked
+      }
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      const btn = document.getElementById('soundToggleBtn');
+      if (soundEnabled) {
+        icon.textContent = '🔊';
+        btn.querySelector('span:last-child').textContent = 'SFX: ON';
+        playBeep(660);
+      } else {
+        icon.textContent = '🔇';
+        btn.querySelector('span:last-child').textContent = 'SFX: OFF';
+      }
+    }
+
+    // Coming Soon Modal handlers
+    function openComingSoon(categoryName) {
+      playBeep(330, 'sawtooth', 0.1);
+      const modal = document.getElementById('comingSoonModal');
+      const catEl = document.getElementById('comingSoonCategory');
+      const titleEl = document.getElementById('comingSoonTitle');
+      
+      catEl.textContent = `SECTION: ${categoryName.toUpperCase()}`;
+      titleEl.textContent = `${categoryName.toUpperCase()}_SOON.EXE`;
+      modal.classList.remove('hidden');
+    }
+
+    function closeComingSoon() {
+      playBeep(220, 'square', 0.05);
+      document.getElementById('comingSoonModal').classList.add('hidden');
+    }
+
+    // Contact Modal handlers
+    function openContactModal() {
+      playBeep(587, 'triangle', 0.12);
+      document.getElementById('contactModal').classList.remove('hidden');
+    }
+
+    function closeContactModal() {
+      playBeep(220, 'square', 0.05);
+      document.getElementById('contactModal').classList.add('hidden');
+    }
+
+    function handleMailClick() {
+      playBeep(880, 'sine', 0.15);
+      const feedback = document.getElementById('copyFeedback');
+      feedback.classList.remove('hidden');
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+      }, 3000);
+    }
+
+    // Close modals on ESC key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeComingSoon();
+        closeContactModal();
+      }
+    });
+
+    // Add interactive click sounds to all buttons and links
+    document.addEventListener('DOMContentLoaded', () => {
+      const interactives = document.querySelectorAll('button, a');
+      interactives.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          if (soundEnabled) playBeep(800, 'triangle', 0.02);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
