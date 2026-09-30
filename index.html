@@ -241,7 +241,6 @@
                   src="cdv_photo_17901345531.jpg" 
                   alt="Wei Lun Chien 個人照片" 
                   class="w-full h-auto aspect-[3/4] object-cover filter contrast-105 saturate-110 transition duration-300 group-hover:scale-105"
-                  onerror="this.onerror=null; this.src='https://placehold.co/400x533/160d33/00f3ff?text=Wei+Lun+Chien';"
                 />
                 <!-- Pixel Grid Mask Over Photo -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
@@ -314,6 +313,9 @@
               <button onclick="openContactModal()" class="pixel-btn bg-y2k-pink text-white px-4 py-2 font-pixel text-xs flex items-center gap-2 font-bold hover:bg-yellow-300 hover:text-black">
                 <span>✉️</span> 聯絡我 (CONTACT)
               </button>
+              <a href="game.html" class="pixel-btn bg-y2k-yellow text-black px-4 py-2 font-pixel text-xs flex items-center gap-2 font-bold hover:bg-white transition">
+                <span>🎮</span> 玩我的小遊戲
+              </a>
             </div>
 
           </div>
@@ -343,11 +345,20 @@
 
         <!-- Dialogue Box -->
         <div class="bg-black/80 border-2 border-gray-700 p-4 sm:p-6 relative">
-          <div class="flex items-start gap-4">
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
             <!-- Retro NPC Face Icon -->
             <div class="hidden sm:flex flex-col items-center bg-gray-900 border border-y2k-pink p-2 shrink-0">
               <span class="text-3xl">🧙‍♂️</span>
               <span class="font-pixel text-[8px] text-y2k-pink mt-1">CHIEN</span>
+            </div>
+
+            <!-- Personal Photo -->
+            <div class="shrink-0 flex justify-center">
+              <img
+                src="images/me.jpg"
+                alt="【Wei Lun Chien】"
+                class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-y2k-cyan shadow-[4px_4px_0px_#ff007f]"
+              />
             </div>
 
             <!-- Verbatim Profile Content -->
