@@ -46,21 +46,6 @@
   </script>
 
   <style>
-    /* Retro CRT scanlines overlay */
-    .scanlines {
-      background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.25) 50%
-      ), linear-gradient(
-        90deg,
-        rgba(255, 0, 0, 0.03),
-        rgba(0, 255, 0, 0.01),
-        rgba(0, 0, 255, 0.03)
-      );
-      background-size: 100% 4px, 6px 100%;
-      pointer-events: none;
-    }
-
     /* Pixel Art Box Shadow (Chunky 90s feel) */
     .pixel-box {
       box-shadow: 4px 4px 0px #000000;
@@ -106,7 +91,7 @@
       box-shadow: 1px 1px 0px #000;
     }
 
-    /* Blinking Caret & Glowing Text */
+    /* Blinking Caret */
     @keyframes blink {
       0%, 49% { opacity: 1; }
       50%, 100% { opacity: 0; }
@@ -115,7 +100,7 @@
       animation: blink 0.8s infinite;
     }
 
-    /* Cyber grid background */
+    /* Cyber grid background (only on background, never covering photos) */
     .cyber-grid {
       background-size: 32px 32px;
       background-image: 
@@ -137,14 +122,10 @@
       animation-play-state: paused;
     }
 
-    /* CRT flicker subtle animation */
-    @keyframes crt-flicker {
-      0% { opacity: 0.98; }
-      50% { opacity: 1; }
-      100% { opacity: 0.99; }
-    }
-    .crt-glow {
-      animation: crt-flicker 0.15s infinite;
+    /* Clean portrait styling */
+    .portrait-clean {
+      image-rendering: auto;
+      filter: brightness(1.03) contrast(1.02);
     }
 
     /* Custom retro scrollbar */
@@ -164,10 +145,7 @@
     }
   </style>
 </head>
-<body class="bg-y2k-bg text-white font-sans min-h-screen cyber-grid crt-glow relative overflow-x-hidden selection:bg-y2k-pink selection:text-white">
-
-  <!-- CRT Scanline Effect (Non-blocking) -->
-  <div class="fixed inset-0 scanlines z-50 pointer-events-none"></div>
+<body class="bg-y2k-bg text-white font-sans min-h-screen cyber-grid relative overflow-x-hidden selection:bg-y2k-pink selection:text-white">
 
   <!-- Y2K Retro Top Marquee Banner -->
   <div class="bg-black border-b-2 border-y2k-pink text-y2k-yellow font-vt text-lg md:text-xl py-1 overflow-hidden sticky top-0 z-40 shadow-lg">
@@ -177,7 +155,7 @@
   </div>
 
   <!-- Top Navigation Bar -->
-  <header class="max-w-5xl mx-auto px-4 pt-4 pb-2">
+  <header class="max-w-5xl mx-auto px-4 pt-4 pb-2 relative z-10">
     <nav class="win98-window p-2 rounded-none border-2 border-black flex flex-wrap items-center justify-between gap-3">
       <!-- Title Bar Icon & Identity -->
       <div class="flex items-center gap-2">
@@ -203,15 +181,16 @@
           Tools <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
         </button>
 
-        <button onclick="openComingSoon('Games')" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-pink hover:text-white transition flex items-center gap-1">
-          Games <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
-        </button>
+        <!-- 已連動至 game.html -->
+        <a href="game.html" onclick="playBeep(660)" class="win98-btn px-2.5 py-1 text-xs font-pixel text-black bg-y2k-yellow hover:bg-y2k-pink hover:text-white transition flex items-center gap-1 font-bold">
+          Games <span class="text-[9px] bg-y2k-win-blue text-white px-1 font-sans font-bold">PLAY</span>
+        </a>
       </div>
     </nav>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 py-6 space-y-12">
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-12 relative z-10">
 
     <!-- HERO SECTION -->
     <section id="hero" class="relative">
@@ -219,45 +198,44 @@
         
         <!-- Y2K Hologram Ribbon -->
         <div class="absolute -right-12 top-6 bg-y2k-yellow text-black font-pixel text-[10px] py-1 px-14 rotate-45 border-2 border-black font-bold uppercase shadow-md select-none">
-          VER 2026.1
+          VER 2026.2
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
           
           <!-- Character Avatar Window -->
           <div class="md:col-span-5 flex flex-col items-center">
-            <div class="win98-window p-2 w-full max-w-[280px] sm:max-w-[320px]">
+            <div class="win98-window p-2.5 w-full max-w-[280px] sm:max-w-[310px]">
               <div class="win98-titlebar px-2 py-1 flex justify-between items-center mb-2">
-                <span class="text-white font-pixel text-[10px] tracking-wide truncate">AVATAR_PREVIEW.BMP</span>
+                <span class="text-white font-pixel text-[10px] tracking-wide truncate">PORTRAIT_VIEW.JPG</span>
                 <div class="flex gap-1">
-                  <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold">_</span>
-                  <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold">X</span>
+                  <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold text-black">_</span>
+                  <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold text-black">X</span>
                 </div>
               </div>
               
-              <!-- Photo Container with retro border -->
-              <div class="relative border-2 border-black bg-black overflow-hidden group">
+              <!-- Clean Photo Container without scary dark masks or scanlines -->
+              <div class="relative border-2 border-white bg-gray-100 overflow-hidden shadow-inner">
                 <img
                   src="images/me.jpg"
-                  alt="【Wei Lun Chien】"
-                  class="w-full aspect-[3/4] object-cover block filter contrast-105 saturate-110 transition duration-300 group-hover:scale-105"
+                  onerror="if(this.src.indexOf('images/me.jpg')!==-1) this.src='me.jpg';"
+                  alt="Wei Lun Chien"
+                  class="w-full aspect-[3/4] object-cover object-center block portrait-clean transition duration-300 hover:scale-[1.02]"
                 />
-                <!-- Pixel Grid Mask Over Photo -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
-                <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[10px] font-pixel text-y2k-cyan">
-                  <span>CHAR: CHIEN</span>
-                  <span class="text-y2k-green">HP: 100/100</span>
-                </div>
               </div>
               
-              <!-- 8-Bit Status Bar Under Avatar -->
-              <div class="mt-2 bg-black p-2 border border-gray-600 text-xs font-vt text-y2k-green space-y-1">
-                <div class="flex justify-between">
+              <!-- Status Bar Placed Cleanly Below Photo -->
+              <div class="mt-2 bg-[#101426] p-2 border-2 border-black text-xs font-vt space-y-1">
+                <div class="flex justify-between items-center text-[10px] font-pixel">
+                  <span class="text-y2k-cyan">PLAYER: CHIEN</span>
+                  <span class="text-y2k-green">LV.99</span>
+                </div>
+                <div class="flex justify-between text-gray-200 text-sm">
                   <span>INTEL (IQ): HIGH</span>
-                  <span>ATTR: LOW-KEY</span>
+                  <span>STYLE: LOW-KEY</span>
                 </div>
                 <div class="w-full bg-gray-800 h-2 border border-gray-600">
-                  <div class="bg-y2k-green h-full w-[95%]"></div>
+                  <div class="bg-y2k-green h-full w-full"></div>
                 </div>
               </div>
             </div>
@@ -335,30 +313,28 @@
       </div>
 
       <!-- Retro RPG Text Adventure Window -->
-      <div class="border-4 border-black bg-[#0d0922] p-5 sm:p-7 pixel-box-pink relative">
-        <div class="flex items-center justify-between border-b-2 border-purple-900/80 pb-3 mb-4">
+      <div class="border-4 border-black bg-[#120b2e] p-5 sm:p-7 pixel-box-pink relative">
+        <div class="flex items-center justify-between border-b-2 border-purple-800/80 pb-3 mb-4">
           <div class="flex items-center gap-2">
             <span class="font-pixel text-xs text-y2k-yellow">QUEST_LOG // BIOGRAPHY</span>
           </div>
-          <span class="font-vt text-xl text-gray-400">MODE: TEXT ADVENTURE</span>
+          <span class="font-vt text-xl text-gray-300">MODE: TEXT ADVENTURE</span>
         </div>
 
         <!-- Dialogue Box -->
-        <div class="bg-black/80 border-2 border-gray-700 p-4 sm:p-6 relative">
-          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-            <!-- Retro NPC Face Icon -->
-            <div class="hidden sm:flex flex-col items-center bg-gray-900 border border-y2k-pink p-2 shrink-0">
-              <span class="text-3xl">🧙‍♂️</span>
-              <span class="font-pixel text-[8px] text-y2k-pink mt-1">CHIEN</span>
-            </div>
-
-            <!-- Personal Photo -->
-            <div class="shrink-0 flex justify-center">
-              <img
-                src="images/me.jpg"
-                alt="【Wei Lun Chien】"
-                class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-y2k-cyan shadow-[4px_4px_0px_#ff007f]"
-              />
+        <div class="bg-[#0a061a] border-2 border-y2k-cyan/50 p-4 sm:p-6 relative">
+          <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+            <!-- Personal Photo (Clean & Bright Frame) -->
+            <div class="shrink-0 flex flex-col items-center gap-1.5">
+              <div class="p-1 bg-white rounded-2xl border-2 border-y2k-cyan shadow-md">
+                <img
+                  src="images/me.jpg"
+                  onerror="if(this.src.indexOf('images/me.jpg')!==-1) this.src='me.jpg';"
+                  alt="Wei Lun Chien"
+                  class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover object-center portrait-clean"
+                />
+              </div>
+              <span class="font-pixel text-[9px] text-y2k-cyan bg-black/80 px-2 py-0.5 border border-y2k-cyan/40">WEI LUN CHIEN</span>
             </div>
 
             <!-- Verbatim Profile Content -->
@@ -375,8 +351,8 @@
 
               <!-- RPG Action Choice Pills -->
               <div class="pt-2 border-t border-gray-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-gray-400">
-                <span>[SPACE] 繼續對話 ✦ [ESC] 關閉日誌</span>
-                <span class="text-y2k-yellow font-pixel text-[10px] animate-pulse">▼ PRESS TO INTERACT</span>
+                <span>[READY] 歡迎交流動漫小說與遊戲創作</span>
+                <a href="game.html" class="text-y2k-yellow font-pixel text-[10px] hover:underline">▶ 前往霓虹乒乓小遊戲</a>
               </div>
             </div>
           </div>
@@ -521,7 +497,7 @@
         <div class="win98-titlebar px-2 py-1 text-left mb-4 flex items-center justify-between">
           <span class="text-white font-pixel text-xs">TRANSMIT_MESSAGE.EXE</span>
           <div class="flex gap-1">
-            <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold">X</span>
+            <span class="w-3 h-3 bg-gray-300 win98-btn text-[8px] flex items-center justify-center font-bold text-black">X</span>
           </div>
         </div>
 
@@ -533,14 +509,20 @@
             若您對動漫小說、遊戲創作或 AI 協作應用有任何交流想法，歡迎隨時傳遞訊息！
           </p>
 
-          <div class="pt-2">
+          <div class="pt-2 flex flex-wrap justify-center gap-3">
             <!-- Main CTA Pixel Button -->
             <button 
               onclick="openContactModal()" 
-              class="pixel-btn bg-y2k-yellow text-black font-pixel text-sm sm:text-base px-8 py-3.5 tracking-wider hover:bg-white hover:text-black inline-flex items-center gap-3 font-bold"
+              class="pixel-btn bg-y2k-yellow text-black font-pixel text-sm sm:text-base px-6 py-3.5 tracking-wider hover:bg-white hover:text-black inline-flex items-center gap-2 font-bold"
             >
-              <span>✉️</span> 聯絡我 / CONTACT ME <span>⚡</span>
+              <span>✉️</span> 聯絡我 / CONTACT
             </button>
+            <a 
+              href="game.html" 
+              class="pixel-btn bg-y2k-cyan text-black font-pixel text-sm sm:text-base px-6 py-3.5 tracking-wider hover:bg-white hover:text-black inline-flex items-center gap-2 font-bold"
+            >
+              <span>🕹️</span> 挑戰霓虹乒乓
+            </a>
           </div>
 
           <p class="text-xs text-gray-400 font-mono">
@@ -553,7 +535,7 @@
   </main>
 
   <!-- RETRO FOOTER -->
-  <footer class="border-t-4 border-black bg-black text-gray-300 py-8 px-4 mt-16 font-mono text-xs">
+  <footer class="border-t-4 border-black bg-black text-gray-300 py-8 px-4 mt-16 font-mono text-xs relative z-10">
     <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
       
       <!-- Identity & Copyright -->
@@ -574,7 +556,7 @@
         <!-- 800x600 Badge -->
         <div class="flex items-center gap-2">
           <span class="border border-gray-700 bg-gray-800 text-[10px] px-2 py-0.5 text-gray-300">
-            BEST VIEWED IN 800x600
+            BEST VIEWED IN ANY RESOLUTION
           </span>
           <span class="border border-y2k-pink bg-pink-950 text-y2k-pink text-[10px] px-2 py-0.5">
             MADE WITH Y2K PIXELS
@@ -585,7 +567,7 @@
     </div>
   </footer>
 
-  <!-- MODAL: Coming Soon (News / Tools / Games) -->
+  <!-- MODAL: Coming Soon (News / Tools) -->
   <div id="comingSoonModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="win98-window w-full max-w-sm border-2 border-black">
       <div class="win98-titlebar px-2 py-1 flex justify-between items-center">
