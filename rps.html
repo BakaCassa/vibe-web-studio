@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CYBER RPS // 霓虹連線猜拳大亂鬥</title>
+
+  <!-- Google Fonts: 延續首頁像素與復古字體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'y2k-bg': '#0c071e',
+            'y2k-card': '#160d33',
+            'y2k-cyan': '#00f3ff',
+            'y2k-pink': '#ff007f',
+            'y2k-green': '#39ff14',
+            'y2k-yellow': '#ffe600',
+            'y2k-win-gray': '#c3c7cb',
+            'y2k-win-blue': '#000080',
+          },
+          fontFamily: {
+            pixel: ['"Press Start 2P"', 'monospace'],
+            vt: ['"VT323"', 'monospace'],
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Firebase SDK (Compat 版本，方便單檔 HTML 直接執行) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    input {
+      -webkit-user-select: text;
+      user-select: text;
+      -webkit-touch-callout: default;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background-color: #0c071e;
+      color: #ffffff;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* 賽博格鬥背景網格與霓虹光暈 */
+    .arcade-bg {
+      background-color: #0c071e;
+      background-image:
+        radial-gradient(circle at 50% 15%, rgba(255, 0, 127, 0.22), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(0, 243, 255, 0.16), transparent 40%),
+        linear-gradient(to right, rgba(0, 243, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 0, 127, 0.06) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+    }
+
+    /* Windows 98 經典立體邊框 */
+    .win98-window {
+      background: #c3c7cb;
+      box-shadow: inset -2px -2px #0a0a0a, inset 2px 2px #fff, inset -4px -4px #808080, inset 4px 4px #dfdfdf, 6px 6px 0px rgba(0, 0, 0, 0.7);
+    }
+    .win98-titlebar {
+      background: linear-gradient(90deg, #000080, #a80054, #008080);
+    }
+    .win98-btn {
+      box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+    }
+    .win98-btn:active {
+      box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf;
+    }
+
+    /* Y2K 像素立體框與按鈕 */
+    .pixel-box-cyan { box-shadow: 5px 5px 0px #00f3ff; }
+    .pixel-box-pink { box-shadow: 5px 5px 0px #ff007f; }
+    .pixel-box-yellow { box-shadow: 5px 5px 0px #ffe600; }
+
+    .pixel-btn {
+      position: relative;
+      border: 3px solid #000;
+      box-shadow: 4px 4px 0px #000;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.12s ease;
+      cursor: pointer;
+    }
+    .pixel-btn:hover:not(:disabled) {
+      filter: brightness(1.1);
+    }
+    .pixel-btn:active:not(:disabled) {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0px #000;
+    }
+    .pixel-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* 猜拳大型街機按鍵 */
+    .rps-card-btn {
+      border: 3px solid #000;
+      box-shadow: 0 6px 0 #000, 0 0 18px rgba(0, 243, 255, 0.15);
+      transition: all 0.1s ease;
+    }
+    .rps-card-btn:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #000;
+    }
+    .rps-card-btn.selected {
+      border-color: #ffe600;
+      box-shadow: 0 3px 0 #000, 0 0 25px rgba(255, 230, 0, 0.75);
+      transform: translateY(3px);
+    }
+
+    /* 出拳待機微幅浮動動畫 */
+    @keyframes float-idle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .animate-float {
+      animation: float-idle 2s ease-in-out infinite;
+    }
+
+    /* 揭曉彈跳動畫 */
+    @keyframes pop-in {
+      0% { transform: scale(0.6); opacity: 0; }
+      75% { transform: scale(1.08); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: pop-in 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+    }
+  </style>
+</head>
+<body class="arcade-bg font-sans flex flex-col justify-between min-h-[100dvh]">
+
+  <!-- 頂部狀態導覽列 -->
+  <header class="w-full max-w-2xl mx-auto px-3 pt-3 pb-1">
+    <nav class="win98-window p-2 border-2 border-black flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <a href="index.html" onclick="playBeep(400)" class="win98-btn px-2.5 py-1 text-xs font-pixel text-black bg-[#d4d0c8] hover:bg-y2k-cyan transition flex items-center gap-1">
+          ← 首頁
+        </a>
+        <span class="font-pixel text-[10px] sm:text-xs text-black tracking-tight truncate">
+          ARCADE_RPS_ONLINE.EXE
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="connBadge" class="px-2 py-0.5 text-[10px] font-pixel bg-gray-800 text-y2k-yellow border border-black">
+          INIT...
+        </span>
+        <button id="soundBtn" onclick="toggleSound()" class="win98-btn px-2 py-1 text-xs font-pixel text-black bg-[#d4d0c8] hover:bg-white">
+          🔊
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 主內容區 -->
+  <main class="w-full max-w-2xl mx-auto px-3 py-2 flex-1 flex flex-col justify-center">
+
+    <!-- Firebase 未設定時的提醒橫幅 -->
+    <div id="configWarning" class="hidden mb-3 border-2 border-y2k-yellow bg-yellow-950/90 p-3 text-xs text-yellow-200 pixel-box-yellow">
+      <div class="font-pixel text-y2k-yellow text-[11px] mb-1">⚠️ 尚未貼上 FIREBASE 設定</div>
+      <p class="leading-relaxed">
+        請用編輯器打開此 HTML，搜尋 <b>【請在下方貼上你的 Firebase 設定】</b> 填入設定即可跨裝置連線。目前可點擊下方「🤖 單機模擬測試」預覽介面與猜拳流程！
+      </p>
+    </div>
+
+    <!-- ==================== 畫面 1：大廳 (建立/加入房間) ==================== -->
+    <section id="lobbyScreen" class="space-y-4">
+      <div class="border-4 border-black bg-y2k-card p-4 sm:p-6 pixel-box-cyan relative overflow-hidden">
+        <!-- 街機裝飾標籤 -->
+        <div class="flex items-center justify-between mb-3 border-b-2 border-purple-900 pb-2">
+          <span class="bg-y2k-pink text-white font-pixel text-[10px] px-2.5 py-1 border border-black">
+            2~3 PLAYERS BATTLE
+          </span>
+          <span class="font-vt text-xl text-y2k-cyan tracking-widest">INSERT COIN // READY</span>
+        </div>
+
+        <div class="text-center space-y-1 mb-5">
+          <h1 class="text-2xl sm:text-4xl font-black font-pixel text-transparent bg-clip-text bg-gradient-to-r from-y2k-cyan via-white to-y2k-pink drop-shadow-[2px_2px_0_#000]">
+            CYBER RPS 猜拳亂鬥
+          </h1>
+          <p class="text-xs sm:text-sm text-gray-300">
+            支援 2～3 人即時連線對決・全員出拳後同步開牌！
+          </p>
+        </div>
+
+        <!-- 步驟 1：玩家暱稱 -->
+        <div class="bg-black/70 border-2 border-y2k-cyan/60 p-3.5 mb-4">
+          <label for="playerNameInput" class="block font-pixel text-[11px] text-y2k-cyan mb-2">
+            STEP 1 // 輸入你的玩家暱稱
+          </label>
+          <input
+            id="playerNameInput"
+            type="text"
+            maxlength="10"
+            placeholder="例如：CHIEN"
+            class="w-full bg-[#090418] border-2 border-y2k-pink px-3 py-2.5 text-white font-bold text-base text-center focus:outline-none focus:border-y2k-yellow"
+          />
+        </div>
+
+        <!-- 步驟 2：建立房間 或 輸入 4 位數房號 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- 建立新房間 -->
+          <div class="win98-window p-3 border-2 border-black flex flex-col justify-between">
+            <div class="win98-titlebar px-2 py-1 text-white font-pixel text-[10px] mb-2 flex justify-between">
+              <span>CREATE_ROOM.EXE</span>
+              <span>★</span>
+            </div>
+            <p class="text-xs text-gray-800 mb-3 font-medium">
+              隨機產生一組 4 位數房號，邀請朋友輸入房號加入（上限 3 人）。
+            </p>
+            <button
+              id="createRoomBtn"
+              onclick="handleCreateRoom()"
+              class="pixel-btn w-full bg-y2k-yellow text-black font-pixel text-xs py-3.5 font-bold hover:bg-white"
+            >
+              ✨ 建立 4 位數房間
+            </button>
+          </div>
+
+          <!-- 加入現有房間 -->
+          <div class="win98-window p-3 border-2 border-black flex flex-col justify-between">
+            <div class="win98-titlebar px-2 py-1 text-white font-pixel text-[10px] mb-2 flex justify-between">
+              <span>JOIN_ROOM.EXE</span>
+              <span>→</span>
+            </div>
+            <div class="space-y-2">
+              <input
+                id="roomCodeInput"
+                type="tel"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="4"
+                placeholder="輸入 4 位數房號"
+                class="w-full bg-white border-2 border-black px-3 py-2 text-black font-pixel text-sm text-center tracking-widest focus:outline-none focus:bg-yellow-50"
+              />
+              <button
+                id="joinRoomBtn"
+                onclick="handleJoinRoom()"
+                class="pixel-btn w-full bg-y2k-cyan text-black font-pixel text-xs py-3 font-bold hover:bg-white"
+              >
+                🚀 加入房間
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 測試/單機預覽按鈕 -->
+        <div class="mt-4 pt-3 border-t border-purple-900/80 flex items-center justify-between flex-wrap gap-2">
+          <span id="lobbyErrorMsg" class="text-xs text-y2k-pink font-bold min-h-[16px]"></span>
+          <button
+            onclick="startOfflineDemo()"
+            class="text-xs font-mono text-gray-300 underline hover:text-y2k-yellow ml-auto"
+          >
+            🤖 單機模擬測試（含 2 位 AI 對手）
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 畫面 2：對戰房間 ==================== -->
+    <section id="gameScreen" class="hidden space-y-3">
+      
+      <!-- 房間資訊列 (房號、人數、離開按鈕) -->
+      <div class="border-3 border-black bg-[#120a2a] p-3 pixel-box-pink flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <div class="bg-black border-2 border-y2k-yellow px-3 py-1">
+            <span class="text-[10px] font-pixel text-gray-400 block">ROOM ID</span>
+            <span id="displayRoomCode" class="font-pixel text-base sm:text-lg text-y2k-yellow tracking-widest">----</span>
+          </div>
+          <button
+            onclick="copyRoomCode()"
+            class="pixel-btn bg-y2k-cyan text-black font-pixel text-[10px] px-2.5 py-2 font-bold"
+            title="複製房號"
+          >
+            📋 複製房號
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="text-right font-vt text-lg leading-tight">
+            <div class="text-y2k-green">PLAYERS: <span id="playerCountText">1/3</span></div>
+            <div class="text-gray-300 text-sm">ROUND #<span id="roundNumberText">1</span></div>
+          </div>
+          <button
+            onclick="leaveRoom()"
+            class="pixel-btn bg-red-600 text-white font-pixel text-[10px] px-2.5 py-2 font-bold"
+          >
+            離開
+          </button>
+        </div>
+      </div>
+
+      <!-- 對戰狀態廣播橫幅 -->
+      <div id="battleBanner" class="bg-black border-2 border-y2k-cyan py-2 px-3 text-center">
+        <p id="battleStatusText" class="font-bold text-sm sm:text-base text-y2k-cyan tracking-wide">
+          等待其他玩家加入房間（需 2～3 人）...
+        </p>
+      </div>
+
+      <!-- 玩家對戰席位區 (自動適應 2~3 人格鬥卡片) -->
+      <div id="playersGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <!-- 由 JS 動態渲染 2~3 位玩家的卡片 -->
+      </div>
+
+      <!-- 回合結果揭曉面板 (當所有人出拳完畢時顯示) -->
+      <div id="resultPanel" class="hidden win98-window p-3 border-2 border-black animate-pop">
+        <div class="win98-titlebar px-2 py-1 flex justify-between items-center mb-2">
+          <span class="text-white font-pixel text-[10px]">ROUND_RESULT.EXE</span>
+          <span class="text-y2k-yellow font-pixel text-[10px]">BATTLE LOG</span>
+        </div>
+        <div class="bg-black p-3.5 border-2 border-gray-700 text-center space-y-2">
+          <div id="resultHeadline" class="text-xl sm:text-2xl font-black font-pixel text-y2k-yellow">
+            回合結果
+          </div>
+          <p id="resultDetail" class="text-xs sm:text-sm text-gray-200"></p>
+          <div class="pt-2">
+            <button
+              onclick="startNextRound()"
+              class="pixel-btn bg-y2k-green text-black font-pixel text-xs px-6 py-3 font-bold hover:bg-white"
+            >
+              ▶ 下一局 (NEXT ROUND)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部手機大尺寸出拳控制面板 -->
+      <div class="border-4 border-black bg-y2k-card p-3 sm:p-4 pixel-box-cyan">
+        <div class="flex items-center justify-between mb-2.5">
+          <span class="font-pixel text-[10px] sm:text-xs text-y2k-yellow">
+            ▼ CHOOSE YOUR WEAPON // 請選擇出拳
+          </span>
+          <span id="myChoiceBadge" class="text-xs font-bold text-gray-300">
+            尚未出拳
+          </span>
+        </div>
+
+        <!-- 3 個超大手機好按的出拳鈕 -->
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-4">
+          <button
+            id="btn-rock"
+            onclick="submitMove('rock')"
+            class="rps-card-btn bg-gradient-to-b from-[#ff007f] to-[#99004d] text-white rounded-xl py-4 sm:py-5 px-2 flex flex-col items-center justify-center gap-1.5"
+          >
+            <span class="text-4xl sm:text-5xl leading-none">✊</span>
+            <span class="font-black text-base sm:text-lg tracking-wider">石頭</span>
+            <span class="font-pixel text-[9px] text-pink-200 opacity-90">ROCK</span>
+          </button>
+
+          <button
+            id="btn-scissors"
+            onclick="submitMove('scissors')"
+            class="rps-card-btn bg-gradient-to-b from-[#00f3ff] to-[#007a80] text-black rounded-xl py-4 sm:py-5 px-2 flex flex-col items-center justify-center gap-1.5"
+          >
+            <span class="text-4xl sm:text-5xl leading-none">✌️</span>
+            <span class="font-black text-base sm:text-lg tracking-wider">剪刀</span>
+            <span class="font-pixel text-[9px] text-cyan-950 font-bold opacity-90">SCISSORS</span>
+          </button>
+
+          <button
+            id="btn-paper"
+            onclick="submitMove('paper')"
+            class="rps-card-btn bg-gradient-to-b from-[#ffe600] to-[#b39b00] text-black rounded-xl py-4 sm:py-5 px-2 flex flex-col items-center justify-center gap-1.5"
+          >
+            <span class="text-4xl sm:text-5xl leading-none">🖐️</span>
+            <span class="font-black text-base sm:text-lg tracking-wider">布</span>
+            <span class="font-pixel text-[9px] text-yellow-950 font-bold opacity-90">PAPER</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- 頁尾資訊 -->
+  <footer class="w-full max-w-2xl mx-auto px-3 py-2 text-center text-[11px] font-mono text-gray-400">
+    CYBERPUNK Y2K EDITION ✦ 2-3 PLAYERS REALTIME RPS ✦ WEI LUN CHIEN
+  </footer>
+
+  <!-- 系統提示 Toast -->
+  <div id="toastBox" class="fixed top-14 left-1/2 -translate-x-1/2 z-50 hidden bg-y2k-yellow text-black font-pixel text-xs px-4 py-2 border-2 border-black shadow-[4px_4px_0_#000]">
+    已複製房號！
+  </div>
+
+  <script>
+    // =========================================================================
+    // ★ 已填入你的專屬 Firebase 設定 ★
+    // =========================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyAH9EhrVCOCnJgWV-jFXf182Gk8TXAUNoI",
+      authDomain: "rps-411406147.firebaseapp.com",
+      databaseURL: "https://rps-411406147-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "rps-411406147",
+      storageBucket: "rps-411406147.firebasestorage.app",
+      messagingSenderId: "473939209271",
+      appId: "1:473939209271:web:29ba1ba6e5a56b73e8a3b2"
+    };
+    // =========================================================================
+
+
+    // ==================== 8-Bit 音效合成器 (Web Audio API) ====================
+    let audioCtx = null;
+    let soundOn = true;
+
+    function playBeep(freq = 440, type = "square", duration = 0.08) {
+      if (!soundOn) return;
+      try {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.07, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playVictoryFanfare() {
+      playBeep(523.25, "square", 0.1);
+      setTimeout(() => playBeep(659.25, "square", 0.1), 90);
+      setTimeout(() => playBeep(783.99, "square", 0.18), 180);
+    }
+
+    function toggleSound() {
+      soundOn = !soundOn;
+      document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+      if (soundOn) playBeep(660);
+    }
+
+    // ==================== 遊戲狀態與 Firebase 初始化 ====================
+    let db = null;
+    let isFirebaseReady = false;
+    let isDemoMode = false;
+
+    const STORAGE_NAME_KEY = "cyberRpsPlayerName";
+    const STORAGE_PID_KEY = "cyberRpsPlayerId";
+
+    // 為當前瀏覽器產生唯一玩家 ID
+    let myPlayerId = sessionStorage.getItem(STORAGE_PID_KEY);
+    if (!myPlayerId) {
+      myPlayerId = "p_" + Math.random().toString(36).substring(2, 9);
+      sessionStorage.setItem(STORAGE_PID_KEY, myPlayerId);
+    }
+
+    let currentRoomCode = null;
+    let roomRef = null;
+    let lastProcessedRound = 0;
+
+    // 單機模擬專用資料
+    let demoRoomData = null;
+
+    const MOVE_INFO = {
+      rock:     { emoji: "✊", label: "石頭", beats: "scissors" },
+      scissors: { emoji: "✌️", label: "剪刀", beats: "paper" },
+      paper:    { emoji: "🖐️", label: "布",   beats: "rock" }
+    };
+
+    // 檢查 Firebase 設定是否已填寫
+    function initFirebase() {
+      const badge = document.getElementById("connBadge");
+      const warning = document.getElementById("configWarning");
+
+      const isPlaceholder = !firebaseConfig.databaseURL ||
+                            firebaseConfig.databaseURL.includes("請替換") ||
+                            firebaseConfig.apiKey.includes("請替換");
+
+      if (isPlaceholder) {
+        badge.textContent = "DEMO MODE";
+        badge.className = "px-2 py-0.5 text-[10px] font-pixel bg-pink-900 text-white border border-black";
+        warning.classList.remove("hidden");
+        isFirebaseReady = false;
+        return;
+      }
+
+      try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        isFirebaseReady = true;
+        badge.textContent = "FIREBASE ON";
+        badge.className = "px-2 py-0.5 text-[10px] font-pixel bg-emerald-900 text-y2k-green border border-black";
+      } catch (err) {
+        console.error("Firebase 初始化失敗:", err);
+        badge.textContent = "CONFIG ERR";
+        warning.classList.remove("hidden");
+      }
+    }
+
+    // 預載玩家名稱
+    const savedName = localStorage.getItem(STORAGE_NAME_KEY) || "";
+    if (savedName) {
+      document.getElementById("playerNameInput").value = savedName;
+    }
+
+    function getValidPlayerName() {
+      const input = document.getElementById("playerNameInput");
+      const name = input.value.trim() || "PLAYER";
+      localStorage.setItem(STORAGE_NAME_KEY, name);
+      return name;
+    }
+
+    function showError(msg) {
+      playBeep(220, "sawtooth", 0.15);
+      const el = document.getElementById("lobbyErrorMsg");
+      el.textContent = msg;
+      setTimeout(() => {
+        if (el.textContent === msg) el.textContent = "";
+      }, 4000);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastBox");
+      toast.textContent = msg;
+      toast.classList.remove("hidden");
+      setTimeout(() => toast.classList.add("hidden"), 2200);
+    }
+
+    // ==================== 建立 4 位數房間 ====================
+    async function handleCreateRoom() {
+      playBeep(520);
+      if (!isFirebaseReady) {
+        showError("尚未填入 Firebase 設定，已為您啟動單機模擬模式！");
+        setTimeout(startOfflineDemo, 700);
+        return;
+      }
+
+      const playerName = getValidPlayerName();
+      const createBtn = document.getElementById("createRoomBtn");
+      createBtn.disabled = true;
+
+      try {
+        // 隨機產生 1000 ~ 9999 的 4 位數房號
+        let code = "";
+        for (let i = 0; i < 5; i++) {
+          const candidate = String(Math.floor(1000 + Math.random() * 9000));
+          const snap = await db.ref("rps_rooms/" + candidate).get();
+          if (!snap.exists()) {
+            code = candidate;
+            break;
+          }
+        }
+        if (!code) code = String(Math.floor(1000 + Math.random() * 9000));
+
+        const initialRoom = {
+          round: 1,
+          scoredRound: 0,
+          createdAt: Date.now(),
+          players: {
+            [myPlayerId]: {
+              name: playerName,
+              score: 0,
+              choice: "",
+              joinedAt: Date.now()
+            }
+          }
+        };
+
+        await db.ref("rps_rooms/" + code).set(initialRoom);
+        enterRoom(code);
+      } catch (err) {
+        console.error(err);
+        showError("建立房間失敗，請檢查 Firebase 資料庫權限 (Rules)");
+      } finally {
+        createBtn.disabled = false;
+      }
+    }
+
+    // ==================== 加入 4 位數房間 ====================
+    async function handleJoinRoom() {
+      playBeep(520);
+      const code = document.getElementById("roomCodeInput").value.trim();
+      if (!/^\d{4}$/.test(code)) {
+        showError("請輸入正確的 4 位數字房號！");
+        return;
+      }
+
+      if (!isFirebaseReady) {
+        showError("尚未填入 Firebase 設定，已為您啟動單機模擬模式！");
+        setTimeout(startOfflineDemo, 700);
+        return;
+      }
+
+      const playerName = getValidPlayerName();
+      const joinBtn = document.getElementById("joinRoomBtn");
+      joinBtn.disabled = true;
+
+      try {
+        const targetRef = db.ref("rps_rooms/" + code);
+        const snap = await targetRef.get();
+
+        if (!snap.exists()) {
+          showError(`找不到房號 ${code}，請確認房號是否正確！`);
+          return;
+        }
+
+        const roomData = snap.val();
+        const players = roomData.players || {};
+        const playerIds = Object.keys(players);
+
+        // 檢查人數限制 (每間 2~3 人，上限 3 人)
+        if (!players[myPlayerId] && playerIds.length >= 3) {
+          showError(`房間 ${code} 已滿（上限 3 人）！`);
+          return;
+        }
+
+        await targetRef.child("players/" + myPlayerId).set({
+          name: playerName,
+          score: players[myPlayerId] ? players[myPlayerId].score : 0,
+          choice: "",
+          joinedAt: players[myPlayerId] ? players[myPlayerId].joinedAt : Date.now()
+        });
+
+        enterRoom(code);
+      } catch (err) {
+        console.error(err);
+        showError("加入房間失敗，請檢查連線或資料庫權限");
+      } finally {
+        joinBtn.disabled = false;
+      }
+    }
+
+    // ==================== 進入房間並監聽即時狀態 ====================
+    function enterRoom(code) {
+      isDemoMode = false;
+      currentRoomCode = code;
+      lastProcessedRound = 0;
+
+      document.getElementById("lobbyScreen").classList.add("hidden");
+      document.getElementById("gameScreen").classList.remove("hidden");
+      document.getElementById("displayRoomCode").textContent = code;
+
+      roomRef = db.ref("rps_rooms/" + code);
+
+      // 設定斷線時自動移除該玩家
+      const myPlayerRef = roomRef.child("players/" + myPlayerId);
+      myPlayerRef.onDisconnect().remove();
+
+      // 監聽房間資料即時變動
+      roomRef.on("value", (snapshot) => {
+        if (!snapshot.exists()) {
+          leaveRoom();
+          return;
+        }
+        const roomData = snapshot.val();
+        renderRoomState(roomData);
+      });
+    }
+
+    // ==================== 單機模擬模式（方便單人測試） ====================
+    function startOfflineDemo() {
+      playBeep(660);
+      isDemoMode = true;
+      currentRoomCode = "8888";
+      lastProcessedRound = 0;
+      const playerName = getValidPlayerName();
+
+      demoRoomData = {
+        round: 1,
+        scoredRound: 0,
+        players: {
+          [myPlayerId]: { name: playerName, score: 0, choice: "", joinedAt: 1 },
+          "bot_1":      { name: "CYBER_BOT", score: 0, choice: "", joinedAt: 2 },
+          "bot_2":      { name: "PIXEL_ACE", score: 0, choice: "", joinedAt: 3 }
+        }
+      };
+
+      document.getElementById("lobbyScreen").classList.add("hidden");
+      document.getElementById("gameScreen").classList.remove("hidden");
+      document.getElementById("displayRoomCode").textContent = "8888";
+      renderRoomState(demoRoomData);
+      showToast("已進入 3 人單機模擬模式！");
+    }
+
+    // ==================== 渲染房間與對戰邏輯 ====================
+    function renderRoomState(roomData) {
+      const playersMap = roomData.players || {};
+      const sortedIds = Object.keys(playersMap).sort(
+        (a, b) => (playersMap[a].joinedAt || 0) - (playersMap[b].joinedAt || 0)
+      );
+
+      const totalPlayers = sortedIds.length;
+      const currentRound = roomData.round || 1;
+
+      document.getElementById("playerCountText").textContent = `${totalPlayers}/3`;
+      document.getElementById("roundNumberText").textContent = currentRound;
+
+      // 檢查是否所有在場玩家（至少 2 人）都已出拳
+      const enoughPlayers = totalPlayers >= 2;
+      const allChosen = enoughPlayers && sortedIds.every(uid => Boolean(playersMap[uid].choice));
+
+      // 更新上方狀態文字
+      const bannerEl = document.getElementById("battleStatusText");
+      if (!enoughPlayers) {
+        bannerEl.textContent = "⏳ 等待其他玩家加入（需要 2～3 人即可開戰）...";
+        bannerEl.className = "font-bold text-sm sm:text-base text-y2k-yellow tracking-wide";
+      } else if (!allChosen) {
+        const readyCount = sortedIds.filter(uid => Boolean(playersMap[uid].choice)).length;
+        bannerEl.textContent = `⚔️ 對決進行中！已出拳鎖定：${readyCount} / ${totalPlayers} 人`;
+        bannerEl.className = "font-bold text-sm sm:text-base text-y2k-cyan tracking-wide";
+      } else {
+        bannerEl.textContent = "💥 全員出拳完畢！開牌揭曉！";
+        bannerEl.className = "font-bold text-sm sm:text-base text-y2k-green tracking-wide";
+      }
+
+      // 若全員出拳完畢，計算勝負並更新分數
+      let roundOutcome = null;
+      if (allChosen) {
+        roundOutcome = evaluateRound(playersMap, sortedIds);
+        triggerScoreUpdateIfNeeded(roomData, roundOutcome);
+      }
+
+      // 渲染 2~3 位玩家的席位卡片
+      const gridEl = document.getElementById("playersGrid");
+      const slotsHTML = [];
+
+      sortedIds.forEach((uid, idx) => {
+        const p = playersMap[uid];
+        const isMe = uid === myPlayerId;
+        const hasChosen = Boolean(p.choice);
+        const isWinner = roundOutcome && roundOutcome.winners.includes(uid);
+
+        // 決定中央顯示的拳種圖示（未全部出完前，別人的出拳需保密）
+        let centerIcon = "⌛";
+        let statusLabel = "思考中...";
+        let statusColor = "text-gray-400";
+
+        if (allChosen) {
+          centerIcon = MOVE_INFO[p.choice].emoji;
+          statusLabel = MOVE_INFO[p.choice].label;
+          statusColor = isWinner ? "text-y2k-yellow font-black" : "text-white";
+        } else if (hasChosen) {
+          centerIcon = isMe ? MOVE_INFO[p.choice].emoji : "🔒";
+          statusLabel = isMe ? `已選：${MOVE_INFO[p.choice].label}` : "READY // 已鎖定";
+          statusColor = "text-y2k-green font-bold";
+        }
+
+        const borderClass = isWinner
+          ? "border-y2k-yellow shadow-[0_0_20px_rgba(255,230,0,0.5)]"
+          : isMe
+          ? "border-y2k-cyan"
+          : "border-y2k-pink";
+
+        slotsHTML.push(`
+          <div class="bg-[#0e0724] border-2 ${borderClass} p-3 flex flex-col justify-between relative">
+            <div class="flex items-center justify-between border-b border-purple-900 pb-1.5">
+              <div class="flex items-center gap-1.5 truncate">
+                <span class="font-pixel text-[10px] px-1.5 py-0.5 ${isMe ? 'bg-y2k-cyan text-black' : 'bg-y2k-pink text-white'}">
+                  P${idx + 1}
+                </span>
+                <span class="font-bold text-sm text-white truncate">
+                  ${escapeHTML(p.name)} ${isMe ? '(你)' : ''}
+                </span>
+              </div>
+              <span class="font-vt text-xl text-y2k-yellow shrink-0">
+                ★ ${p.score || 0}
+              </span>
+            </div>
+
+            <div class="my-4 text-center">
+              <div class="text-5xl sm:text-6xl leading-none select-none ${!allChosen && hasChosen ? 'animate-float' : ''}">
+                ${centerIcon}
+              </div>
+              <div class="mt-2 text-xs ${statusColor}">
+                ${statusLabel}
+              </div>
+            </div>
+
+            ${isWinner ? `
+              <div class="bg-y2k-yellow text-black font-pixel text-[10px] text-center py-1 font-bold">
+                🏆 WINNER +1
+              </div>
+            ` : `
+              <div class="bg-black/60 text-gray-400 font-pixel text-[9px] text-center py-1">
+                ${hasChosen ? 'STATUS: LOCKED' : 'STATUS: WAITING'}
+              </div>
+            `}
+          </div>
+        `);
+      });
+
+      // 若房間只有 1 人，顯示等待空位卡片
+      if (totalPlayers < 2) {
+        slotsHTML.push(`
+          <div class="bg-black/40 border-2 border-dashed border-gray-600 p-4 flex flex-col items-center justify-center text-center min-h-[160px]">
+            <div class="text-3xl mb-2 opacity-60">👾</div>
+            <div class="font-pixel text-[10px] text-gray-400 mb-1">WAITING PLAYER 2...</div>
+            <div class="text-xs text-gray-400">請將房號 <b class="text-y2k-yellow">${currentRoomCode}</b> 傳給朋友加入</div>
+          </div>
+        `);
+      }
+
+      gridEl.innerHTML = slotsHTML.join("");
+
+      // 更新自己的出拳按鈕高亮與結果面板
+      const myData = playersMap[myPlayerId];
+      const myChoice = myData ? myData.choice : "";
+      updateMoveButtonsUI(myChoice, allChosen, enoughPlayers);
+
+      const resultPanel = document.getElementById("resultPanel");
+      if (allChosen && roundOutcome) {
+        resultPanel.classList.remove("hidden");
+        document.getElementById("resultHeadline").textContent = roundOutcome.headline;
+        document.getElementById("resultDetail").textContent = roundOutcome.detail;
+      } else {
+        resultPanel.classList.add("hidden");
+      }
+    }
+
+    // ==================== 2~3 人猜拳勝負判定演算法 ====================
+    function evaluateRound(playersMap, sortedIds) {
+      const choices = sortedIds.map(uid => playersMap[uid].choice);
+      const uniqueChoices = [...new Set(choices)];
+
+      // 情況 1：所有人都出一樣的拳，或 3 人剛好出齊 3 種拳 -> 平手
+      if (uniqueChoices.length === 1 || uniqueChoices.length === 3) {
+        return {
+          isDraw: true,
+          winners: [],
+          headline: "🤝 平手 DRAW GAME!",
+          detail: uniqueChoices.length === 1
+            ? "全員出拳相同，本局不分勝負！"
+            : "石頭、剪刀、布三方互剋，本局平手！"
+        };
+      }
+
+      // 情況 2：全場剛好出現 2 種拳，判斷哪一種勝出
+      const [c1, c2] = uniqueChoices;
+      const winningMove = MOVE_INFO[c1].beats === c2 ? c1 : c2;
+      const winners = sortedIds.filter(uid => playersMap[uid].choice === winningMove);
+      const winnerNames = winners.map(uid => playersMap[uid].name).join("、");
+
+      return {
+        isDraw: false,
+        winningMove,
+        winners,
+        headline: winners.includes(myPlayerId) ? "🎉 YOU WIN! 你贏了！" : "💥 ROUND OVER!",
+        detail: `獲勝者：${winnerNames}（出「${MOVE_INFO[winningMove].label}」獲勝 +1 分）`
+      };
+    }
+
+    // 確保每回合只加一次分數（由房內排序第 1 的玩家執行寫入，避免重複加分）
+    function triggerScoreUpdateIfNeeded(roomData, outcome) {
+      const currentRound = roomData.round || 1;
+      const scoredRound = roomData.scoredRound || 0;
+
+      if (currentRound !== lastProcessedRound) {
+        lastProcessedRound = currentRound;
+        if (outcome.winners.includes(myPlayerId)) {
+          playVictoryFanfare();
+        } else {
+          playBeep(300, "triangle", 0.15);
+        }
+      }
+
+      if (scoredRound >= currentRound) return;
+
+      const playersMap = roomData.players || {};
+      const sortedIds = Object.keys(playersMap).sort(
+        (a, b) => (playersMap[a].joinedAt || 0) - (playersMap[b].joinedAt || 0)
+      );
+
+      // 由房長 (排序第一位) 負責寫入該回合加分
+      if (sortedIds[0] !== myPlayerId) return;
+
+      if (isDemoMode) {
+        demoRoomData.scoredRound = currentRound;
+        outcome.winners.forEach(uid => {
+          demoRoomData.players[uid].score = (demoRoomData.players[uid].score || 0) + 1;
+        });
+        renderRoomState(demoRoomData);
+        return;
+      }
+
+      const updates = { scoredRound: currentRound };
+      outcome.winners.forEach(uid => {
+        const currentScore = playersMap[uid].score || 0;
+        updates[`players/${uid}/score`] = currentScore + 1;
+      });
+      roomRef.update(updates);
+    }
+
+    // ==================== 玩家出拳與下一局控制 ====================
+    function submitMove(move) {
+      playBeep(580, "square", 0.08);
+
+      if (isDemoMode) {
+        if (!demoRoomData) return;
+        demoRoomData.players[myPlayerId].choice = move;
+        const moves = ["rock", "scissors", "paper"];
+        demoRoomData.players["bot_1"].choice = moves[Math.floor(Math.random() * 3)];
+        demoRoomData.players["bot_2"].choice = moves[Math.floor(Math.random() * 3)];
+        renderRoomState(demoRoomData);
+        return;
+      }
+
+      if (!roomRef) return;
+      roomRef.child(`players/${myPlayerId}/choice`).set(move);
+    }
+
+    function startNextRound() {
+      playBeep(660, "triangle", 0.1);
+
+      if (isDemoMode && demoRoomData) {
+        demoRoomData.round += 1;
+        Object.keys(demoRoomData.players).forEach(uid => {
+          demoRoomData.players[uid].choice = "";
+        });
+        renderRoomState(demoRoomData);
+        return;
+      }
+
+      if (!roomRef) return;
+      roomRef.get().then(snap => {
+        if (!snap.exists()) return;
+        const data = snap.val();
+        const nextRound = (data.round || 1) + 1;
+        const updates = { round: nextRound };
+        Object.keys(data.players || {}).forEach(uid => {
+          updates[`players/${uid}/choice`] = "";
+        });
+        roomRef.update(updates);
+      });
+    }
+
+    function updateMoveButtonsUI(myChoice, allChosen, enoughPlayers) {
+      const moves = ["rock", "scissors", "paper"];
+      moves.forEach(m => {
+        const btn = document.getElementById("btn-" + m);
+        btn.disabled = !enoughPlayers || allChosen;
+        if (myChoice === m) {
+          btn.classList.add("selected");
+        } else {
+          btn.classList.remove("selected");
+        }
+      });
+
+      const badge = document.getElementById("myChoiceBadge");
+      if (!enoughPlayers) {
+        badge.textContent = "等待對手加入...";
+        badge.className = "text-xs font-bold text-gray-400";
+      } else if (myChoice) {
+        badge.textContent = `已鎖定：${MOVE_INFO[myChoice].emoji} ${MOVE_INFO[myChoice].label}`;
+        badge.className = "text-xs font-bold text-y2k-green";
+      } else {
+        badge.textContent = "請點擊下方按鈕出拳";
+        badge.className = "text-xs font-bold text-y2k-cyan";
+      }
+    }
+
+    // ==================== 複製房號與離開房間 ====================
+    function copyRoomCode() {
+      playBeep(720);
+      if (!currentRoomCode) return;
+      navigator.clipboard.writeText(currentRoomCode).then(() => {
+        showToast(`已複製房號：${currentRoomCode}`);
+      }).catch(() => {
+        showToast(`房號：${currentRoomCode}`);
+      });
+    }
+
+    function leaveRoom() {
+      playBeep(300);
+      if (roomRef) {
+        roomRef.off();
+        roomRef.child("players/" + myPlayerId).remove();
+        roomRef = null;
+      }
+      currentRoomCode = null;
+      demoRoomData = null;
+      document.getElementById("gameScreen").classList.add("hidden");
+      document.getElementById("lobbyScreen").classList.remove("hidden");
+    }
+
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>'"]/g,
+        tag => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[tag] || tag)
+      );
+    }
+
+    // 啟動初始化
+    initFirebase();
+  </script>
+</body>
+</html>
