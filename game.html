@@ -92,15 +92,16 @@
       z-index: -2;
     }
 
-    a.home-link {
+    a.home-link,
+    button.sfx-toggle {
       position: fixed;
       top: 12px;
-      left: 12px;
       z-index: 60;
       color: #fff;
       text-decoration: none;
+      font-family: inherit;
       font-weight: 800;
-      font-size: clamp(13px, 1.8vw, 16px);
+      font-size: clamp(13px, 1.8vw, 15px);
       letter-spacing: 0.03em;
       padding: 7px 14px;
       border: 1px solid rgba(33, 246, 255, 0.65);
@@ -110,12 +111,35 @@
         0 0 12px rgba(33, 246, 255, 0.28),
         inset 0 0 12px rgba(33, 246, 255, 0.08);
       transition: 0.18s ease;
+      cursor: pointer;
     }
 
-    a.home-link:hover {
+    a.home-link {
+      left: 12px;
+    }
+
+    button.sfx-toggle {
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-color: rgba(255, 43, 214, 0.65);
+      box-shadow:
+        0 0 12px rgba(255, 43, 214, 0.28),
+        inset 0 0 12px rgba(255, 43, 214, 0.08);
+    }
+
+    a.home-link:hover,
+    button.sfx-toggle:hover {
       color: var(--cyan);
       border-color: var(--cyan);
       transform: translateY(-1px);
+    }
+
+    button.sfx-toggle.muted {
+      opacity: 0.68;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: none;
     }
 
     .game-shell {
@@ -209,7 +233,7 @@
       background: rgba(4, 0, 12, 0.94);
     }
 
-    /* 改為全螢幕獨立彈窗，手機與電腦皆可完整舒適瀏覽與填寫資料 */
+    /* 全螢幕獨立彈窗，手機與電腦皆可完整舒適瀏覽與填寫資料 */
     .overlay {
       position: fixed;
       inset: 0;
@@ -613,7 +637,13 @@
   </style>
 </head>
 <body>
-  <a class="home-link" href="index.html">← 回首頁</a>
+  <a class="home-link" href="index.html" id="homeLink">← 回首頁</a>
+
+  <!-- 與個人主頁風格一致的 8-bit 音效開關按鈕 -->
+  <button id="sfxToggleBtn" class="sfx-toggle" type="button" title="切換 8-bit 街機音效">
+    <span id="sfxIcon">🔊</span>
+    <span id="sfxLabel">SFX: ON</span>
+  </button>
 
   <main class="game-shell" aria-label="霓虹乒乓遊戲">
     <div class="topbar">
@@ -705,16 +735,167 @@
       const startButton = document.getElementById("startButton");
       const statusEl = document.getElementById("status");
 
-      // 排行榜相關 DOM
+      // 排行榜與音效相關 DOM
       const submitBox = document.getElementById("submitBox");
       const nicknameInput = document.getElementById("nicknameInput");
       const submitScoreBtn = document.getElementById("submitScoreBtn");
       const statusMsg = document.getElementById("statusMsg");
       const lbList = document.getElementById("lbList");
       const refreshBtn = document.getElementById("refreshBtn");
+      const sfxToggleBtn = document.getElementById("sfxToggleBtn");
+      const sfxIcon = document.getElementById("sfxIcon");
+      const sfxLabel = document.getElementById("sfxLabel");
+      const homeLink = document.getElementById("homeLink");
 
       const STORAGE_KEY = "neonPongBestScore";
       const NAME_STORAGE_KEY = "neonPongPlayerName";
+      const SFX_STORAGE_KEY = "neonPongSoundEnabled";
+
+      // ==================== 8-Bit / Synthwave 街機音效系統 (承襲個人主頁設計) ====================
+      let audioCtx = null;
+      let soundEnabled = localStorage.getItem(SFX_STORAGE_KEY) !== "false";
+
+      function updateSfxButtonUI() {
+        if (soundEnabled) {
+          sfxIcon.textContent = "🔊";
+          sfxLabel.textContent = "SFX: ON";
+          sfxToggleBtn.classList.remove("muted");
+        } else {
+          sfxIcon.textContent = "🔇";
+          sfxLabel.textContent = "SFX: OFF";
+          sfxToggleBtn.classList.add("muted");
+        }
+      }
+      updateSfxButtonUI();
+
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === "suspended") {
+          audioCtx.resume().catch(() => {});
+        }
+      }
+
+      // 基礎單音合成器（與個人主頁 playBeep 相容，並支援頻率滑音與音量控制）
+      function playBeep(freq = 440, type = "square", duration = 0.08, volume = 0.08, slideToFreq = null, delay = 0) {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          if (!audioCtx) return;
+
+          const startTime = audioCtx.currentTime + delay;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, startTime);
+          if (slideToFreq) {
+            osc.frequency.exponentialRampToValueAtTime(slideToFreq, startTime + duration);
+          }
+
+          gain.gain.setValueAtTime(0.0001, startTime);
+          gain.gain.linearRampToValueAtTime(volume, startTime + 0.006);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(startTime);
+          osc.stop(startTime + duration + 0.01);
+        } catch (e) {
+          // 若瀏覽器阻擋自動播放則靜默略過
+        }
+      }
+
+      // 街機專屬情境音效集
+      const SFX = {
+        // UI 按鈕懸停（與首頁一致的 800Hz 三角波）
+        hover() {
+          playBeep(800, "triangle", 0.02, 0.045);
+        },
+        // UI 按鈕點擊（與首頁進入乒乓一致的 660Hz 方波）
+        click() {
+          playBeep(660, "square", 0.07, 0.08);
+        },
+        // 發球倒數 READY 3, 2, 1
+        countdownTick(num) {
+          const freq = num === 1 ? 587.33 : 440; // 倒數最後一拍稍微升高
+          playBeep(freq, "square", 0.06, 0.065);
+        },
+        // 球正式發射
+        serveGo() {
+          playBeep(523.25, "triangle", 0.14, 0.09, 880);
+        },
+        // 左右牆壁碰撞反彈
+        wallBounce() {
+          playBeep(240, "square", 0.045, 0.055, 190);
+        },
+        // 敵方 AI 球拍擊球
+        enemyHit() {
+          playBeep(340, "sawtooth", 0.075, 0.07, 420);
+        },
+        // 玩家球拍成功接球 & 得分（隨球速提升音調）
+        playerHit(currentSpeed) {
+          const pitchBoost = Math.min(Math.max(0, currentSpeed - 390) * 0.45, 220);
+          const baseFreq = 523.25 + pitchBoost;
+          playBeep(baseFreq, "square", 0.07, 0.085);
+          playBeep(baseFreq * 1.25, "triangle", 0.09, 0.08, null, 0.045);
+        },
+        // 突破敵方底線大得分（華麗三連音）
+        enemyGoal() {
+          playBeep(587.33, "square", 0.08, 0.08, null, 0);
+          playBeep(783.99, "square", 0.08, 0.08, null, 0.07);
+          playBeep(1046.5, "triangle", 0.16, 0.09, null, 0.14);
+        },
+        // 打破歷史最佳紀錄（New Best Score 閃耀音效）
+        newRecord() {
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((n, idx) => {
+            playBeep(n, "triangle", 0.11, 0.085, null, idx * 0.055);
+          });
+        },
+        // 遊戲結束（經典街機失誤下降音階）
+        gameOver() {
+          playBeep(392.0, "sawtooth", 0.13, 0.085, 349.23, 0);
+          playBeep(329.63, "sawtooth", 0.13, 0.085, 293.66, 0.13);
+          playBeep(261.63, "sawtooth", 0.30, 0.095, 146.83, 0.26);
+        },
+        // 排行榜上傳成功
+        submitSuccess() {
+          playBeep(523.25, "square", 0.08, 0.08, null, 0);
+          playBeep(659.25, "square", 0.08, 0.08, null, 0.08);
+          playBeep(783.99, "square", 0.16, 0.09, null, 0.16);
+        },
+        // 警告或上傳失敗
+        error() {
+          playBeep(180, "sawtooth", 0.1, 0.08, 140, 0);
+          playBeep(150, "sawtooth", 0.16, 0.08, 115, 0.1);
+        }
+      };
+
+      sfxToggleBtn.addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem(SFX_STORAGE_KEY, String(soundEnabled));
+        updateSfxButtonUI();
+        if (soundEnabled) {
+          SFX.click();
+        }
+      });
+
+      // 為所有按鈕與連結加上與個人主頁相同的懸停音效
+      document.querySelectorAll("button, a").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          SFX.hover();
+        });
+      });
+
+      homeLink.addEventListener("click", () => {
+        playBeep(440, "square", 0.06, 0.08);
+      });
 
       // 預載上次使用的玩家名稱
       const savedName = localStorage.getItem(NAME_STORAGE_KEY) || "";
@@ -752,12 +933,14 @@
 
       let score = 0;
       let bestScore = Number(localStorage.getItem(STORAGE_KEY) || 0);
+      let hasCelebratedRecordThisRun = false; // 每局只觸發一次破紀錄特別音效
       let running = false;
       let gameOver = false;
       let lastTime = 0;
 
-      // 發球緩衝倒數計時器（秒），大於 0 時球停留在中央並顯示預備倒數
+      // 發球緩衝倒數計時器（秒）與上一次顯示的倒數數字（用於觸發倒數音效）
       let serveDelayTimer = 0;
+      let lastCountdownNum = 0;
 
       // 柔和擊球波紋特效（取代刺眼的全畫面閃白光）
       const ripples = [];
@@ -837,12 +1020,14 @@
       async function submitScore() {
         const name = nicknameInput.value.trim();
         if (!name) {
+          SFX.error();
           statusMsg.textContent = "請先輸入玩家暱稱！";
           statusMsg.style.color = "#ff6b8b";
           nicknameInput.focus();
           return;
         }
 
+        SFX.click();
         localStorage.setItem(NAME_STORAGE_KEY, name);
 
         submitScoreBtn.disabled = true;
@@ -863,16 +1048,19 @@
 
           const result = await res.json();
           if (result && result.success) {
+            SFX.submitSuccess();
             statusMsg.textContent = "✅ 成績已成功登錄！";
             statusMsg.style.color = "#4cff91";
             fetchLeaderboard();
           } else {
+            SFX.error();
             statusMsg.textContent = "上傳失敗：" + (result.message || "未知錯誤");
             statusMsg.style.color = "#ff6b8b";
             submitScoreBtn.disabled = false;
           }
         } catch (err) {
           console.error("上傳失敗:", err);
+          SFX.error();
           statusMsg.textContent = "伺服器連線異常，請稍候重試";
           statusMsg.style.color = "#ff6b8b";
           submitScoreBtn.disabled = false;
@@ -880,13 +1068,16 @@
       }
 
       function escapeHTML(str) {
-        return String(str).replace(/[&<>'"]/g, 
-          tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        return String(str).replace(/[&<>'"]/g,
+          tag => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[tag] || tag)
         );
       }
 
       submitScoreBtn.addEventListener("click", submitScore);
-      refreshBtn.addEventListener("click", fetchLeaderboard);
+      refreshBtn.addEventListener("click", () => {
+        SFX.click();
+        fetchLeaderboard();
+      });
 
       // ==================== 遊戲核心邏輯 ====================
       function addRipple(x, y, color) {
@@ -894,7 +1085,7 @@
       }
 
       // 設定發球與緩衝時間（delay 秒後球才會正式發射）
-      function prepareBall(direction = 1, delay = 1.5) {
+      function prepareBall(direction = 1, delay = 1.5, playInitialTick = false) {
         ball.x = WORLD_W / 2;
         ball.y = WORLD_H / 2;
         const angle = (Math.random() * 0.65 - 0.325);
@@ -902,11 +1093,16 @@
         ball.vx = Math.sin(angle) * speed;
         ball.vy = direction * Math.cos(angle) * speed;
         serveDelayTimer = delay;
+        lastCountdownNum = Math.ceil(delay * 2);
+        if (playInitialTick && running) {
+          SFX.countdownTick(lastCountdownNum);
+        }
       }
 
       function resetGame() {
         resizeCanvas();
         score = 0;
+        hasCelebratedRecordThisRun = (bestScore === 0); // 若原本最高分是 0，避免第 1 分就觸發破紀錄大音效
         player.x = WORLD_W / 2 - player.w / 2;
         enemy.x = WORLD_W / 2 - enemy.w / 2;
         ripples.length = 0;
@@ -916,12 +1112,13 @@
         overlay.classList.add("hidden");
         statusEl.textContent = "準備接球...";
         // 開局給予 1.5 秒緩衝時間讓玩家看清楚球並移動球拍
-        prepareBall(1, 1.5);
+        prepareBall(1, 1.5, true);
       }
 
       function endGame() {
         running = false;
         gameOver = true;
+        SFX.gameOver();
 
         if (score > bestScore) {
           bestScore = score;
@@ -932,7 +1129,7 @@
         overlayTitle.textContent = "遊戲結束";
         overlayText.textContent = "球越過你的球拍了！";
         resultText.innerHTML = `本局分數：<b>${score}</b> 歷史最佳：<b>${bestScore}</b>`;
-        
+
         submitBox.classList.remove("hidden");
         submitScoreBtn.disabled = false;
         statusMsg.textContent = "";
@@ -945,6 +1142,7 @@
       }
 
       function startFromOverlay() {
+        SFX.click();
         overlayTitle.textContent = "霓虹乒乓";
         overlayText.textContent = "接住球，讓它不要越過你的球拍！";
         resultText.textContent = "";
@@ -996,6 +1194,20 @@
         addRipple(ball.x, ball.y, movingDown ? "#21f6ff" : "#ff2bd6");
       }
 
+      function checkAndAwardBestScore() {
+        if (score > bestScore) {
+          bestScore = score;
+          bestScoreEl.textContent = bestScore;
+          localStorage.setItem(STORAGE_KEY, String(bestScore));
+          if (!hasCelebratedRecordThisRun) {
+            hasCelebratedRecordThisRun = true;
+            SFX.newRecord();
+            return true;
+          }
+        }
+        return false;
+      }
+
       function update(dt) {
         // 更新波紋動畫
         for (let i = ripples.length - 1; i >= 0; i--) {
@@ -1012,8 +1224,17 @@
 
         if (serveDelayTimer > 0) {
           serveDelayTimer = Math.max(0, serveDelayTimer - dt);
+          const currentCountNum = Math.ceil(serveDelayTimer * 2);
+
+          if (currentCountNum > 0 && currentCountNum !== lastCountdownNum) {
+            lastCountdownNum = currentCountNum;
+            SFX.countdownTick(currentCountNum);
+          }
+
           if (serveDelayTimer === 0) {
+            lastCountdownNum = 0;
             statusEl.textContent = "遊戲中";
+            SFX.serveGo();
           }
           return;
         }
@@ -1021,31 +1242,36 @@
         ball.x += ball.vx * dt;
         ball.y += ball.vy * dt;
 
+        // 左右牆壁反彈與音效
         if (ball.x - ball.r <= 14) {
           ball.x = 14 + ball.r;
           ball.vx = Math.abs(ball.vx);
+          SFX.wallBounce();
         } else if (ball.x + ball.r >= WORLD_W - 14) {
           ball.x = WORLD_W - 14 - ball.r;
           ball.vx = -Math.abs(ball.vx);
+          SFX.wallBounce();
         }
 
+        // 敵方 AI 球拍擊球
         if (ball.vy < 0 && paddleCollision(enemy, false)) {
           bounceFromPaddle(enemy, false);
+          SFX.enemyHit();
         }
 
+        // 玩家球拍擊球得分
         if (ball.vy > 0 && paddleCollision(player, true)) {
           score += 1;
           playerScoreEl.textContent = score;
 
-          if (score > bestScore) {
-            bestScore = score;
-            bestScoreEl.textContent = bestScore;
-            localStorage.setItem(STORAGE_KEY, String(bestScore));
-          }
-
           bounceFromPaddle(player, true);
+          const celebrated = checkAndAwardBestScore();
+          if (!celebrated) {
+            SFX.playerHit(Math.hypot(ball.vx, ball.vy));
+          }
         }
 
+        // 球越過玩家底線：遊戲結束
         if (ball.y - ball.r > WORLD_H + 12) {
           endGame();
           return;
@@ -1056,14 +1282,13 @@
           score += 1;
           playerScoreEl.textContent = score;
 
-          if (score > bestScore) {
-            bestScore = score;
-            bestScoreEl.textContent = bestScore;
-            localStorage.setItem(STORAGE_KEY, String(bestScore));
+          const celebrated = checkAndAwardBestScore();
+          if (!celebrated) {
+            SFX.enemyGoal();
           }
 
           addRipple(ball.x, 20, "#ffd23f");
-          prepareBall(1, 1.0);
+          prepareBall(1, 1.0, false);
         }
       }
 
@@ -1244,12 +1469,13 @@
 
       startButton.addEventListener("click", startFromOverlay);
 
-      // 手機觸控按鈕（阻擋所有選字與長按選單行為）
+      // 手機觸控按鈕（阻擋所有選字與長按選單行為，並加上微幅觸控回饋音）
       document.querySelectorAll(".touch-button").forEach((button) => {
         const action = button.dataset.action;
 
         const press = (event) => {
           event.preventDefault();
+          initAudio();
           button.classList.add("active");
           if (action === "left") keys.left = true;
           if (action === "right") keys.right = true;
@@ -1283,7 +1509,7 @@
       overlayText.textContent = "接住球，讓它不要越過你的球拍！";
       resultText.textContent = "";
       statusEl.textContent = "準備就緒";
-      prepareBall(1, 1.5);
+      prepareBall(1, 1.5, false);
       draw();
       fetchLeaderboard();
       requestAnimationFrame(frame);
