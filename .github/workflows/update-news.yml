@@ -1,11 +1,13 @@
 env:
-  RSS_URL: "https://www.google.com/alerts/feeds/02437803316835037950/14970927714122536608"
+  # 多個 RSS 網址請用空格或換行隔開（只要確保被引號包住即可）
+  RSS_URLS: |
+    https://www.google.com/alerts/feeds/02437803316835037950/14970927714122536608
+    https://www.google.com/alerts/feeds/02437803316835037950/524016075232281448
 
 name: Update Google Alerts News
 
 on:
   schedule:
-    # 台灣時間早上 8:00 (UTC+8) = UTC 00:00
     - cron: '0 0 * * *'
   workflow_dispatch:
 
@@ -28,20 +30,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull origin main
 
-      - name: Fetch RSS and generate news.json
+      - name: Fetch multiple RSS and generate merged news.json
         run: |
           python3 - << 'EOF'
           import os, json, re, html, urllib.request, urllib.parse
           import xml.etree.ElementTree as ET
           from datetime import datetime, timezone, timedelta
 
-          rss_url = os.environ.get("RSS_URL")
-          req = urllib.request.Request(rss_url, headers={"User-Agent": "Mozilla/5.0"})
-          with urllib.request.urlopen(req, timeout=30) as resp:
-              xml_data = resp.read()
+          raw_urls = os.environ.get("RSS_URLS", "")
+          urls = [u.strip() for u in raw_urls.splitlines() if u.strip()]
 
-          root = ET.fromstring(xml_data)
-          ns = {"atom": "http://www.w3.org/2005/Atom"}
+          all_items = []
 
           def clean_text(raw):
               if not raw:
@@ -62,47 +61,54 @@ jobs:
                   pass
               return url
 
-          items = []
-          entries = root.findall("atom:entry", ns) or root.findall(".//item")
+          for rss_url in urls:
+              try:
+                  req = urllib.request.Request(rss_url, headers={"User-Agent": "Mozilla/5.0"})
+                  with urllib.request.urlopen(req, timeout=30) as resp:
+                      xml_data = resp.read()
 
-          for entry in entries[:10]:
-              title_el = entry.find("atom:title", ns)
-              if title_el is None:
-                  title_el = entry.find("title")
-              title = clean_text(title_el.text if title_el is not None else "無標題")
+                  root = ET.fromstring(xml_data)
+                  ns = {"atom": "http://www.w3.org/2005/Atom"}
+                  entries = root.findall("atom:entry", ns) or root.findall(".//item")
 
-              link = "#"
-              link_el = entry.find("atom:link", ns)
-              if link_el is not None and "href" in link_el.attrib:
-                  link = unwrap_google_url(link_el.attrib["href"])
-              else:
-                  link_el = entry.find("link")
-                  if link_el is not None and link_el.text:
-                      link = unwrap_google_url(link_el.text.strip())
+                  for entry in entries:
+                      title_el = entry.find("atom:title", ns) or entry.find("title")
+                      title = clean_text(title_el.text if title_el is not None else "無標題")
 
-              date_el = entry.find("atom:published", ns)
-              if date_el is None:
-                  date_el = entry.find("atom:updated", ns)
-              if date_el is None:
-                  date_el = entry.find("pubDate")
-              pub_date = (date_el.text.strip()[:10] if (date_el is not None and date_el.text) else "")
+                      link = "#"
+                      link_el = entry.find("atom:link", ns)
+                      if link_el is not None and "href" in link_el.attrib:
+                          link = unwrap_google_url(link_el.attrib["href"])
+                      else:
+                          le = entry.find("link")
+                          if le is not None and le.text:
+                              link = unwrap_google_url(le.text.strip())
 
-              content_el = entry.find("atom:content", ns)
-              if content_el is None:
-                  content_el = entry.find("description")
-              summary = clean_text(content_el.text if content_el is not None else "")
+                      date_el = entry.find("atom:published", ns) or entry.find("atom:updated", ns) or entry.find("pubDate")
+                      pub_date = (date_el.text.strip()[:10] if (date_el is not None and date_el.text) else "")
 
-              items.append({
-                  "title": title,
-                  "link": link,
-                  "date": pub_date,
-                  "summary": summary
-              })
+                      content_el = entry.find("atom:content", ns) or entry.find("description")
+                      summary = clean_text(content_el.text if content_el is not None else "")
+
+                      all_items.append({
+                          "title": title,
+                          "link": link,
+                          "date": pub_date,
+                          "summary": summary
+                      })
+              except Exception as e:
+                  print(f"Error fetching {rss_url}: {e}")
+
+          # 依日期由新到舊排序（若日期相同則維持順序）
+          all_items.sort(key=lambda x: x["date"], reverse=True)
+          
+          # 取前 15 筆合併後的新聞
+          final_items = all_items[:15]
 
           tw_tz = timezone(timedelta(hours=8))
           payload = {
               "updatedAt": datetime.now(tw_tz).strftime("%Y-%m-%d %H:%M:%S"),
-              "items": items
+              "items": final_items
           }
 
           with open("news.json", "w", encoding="utf-8") as f:
@@ -112,5 +118,5 @@ jobs:
       - name: Commit and push news.json
         run: |
           git add news.json
-          git diff --staged --quiet || git commit -m "chore: update news.json"
+          git diff --staged --quiet || git commit -m "chore: update merged news.json"
           git push origin HEAD:main
