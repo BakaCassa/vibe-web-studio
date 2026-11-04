@@ -32,7 +32,7 @@ jobs:
       - name: Fetch multiple RSS and generate merged news.json
         run: |
           python3 - << 'EOF'
-          import os, json, re, html, urllib.request, urllib.parse
+          import os, json, re, html, urllib.request, urllib.parse, difflib
           import xml.etree.ElementTree as ET
           from datetime import datetime, timezone, timedelta
 
@@ -60,6 +60,21 @@ jobs:
               text = re.sub(r"<[^>]+>", "", text)
               text = html.unescape(text)
               return re.sub(r"\s+", " ", text).strip()
+
+          def normalize_title(title):
+              """移除各家媒體後綴（如 - 自由時報、| ETtoday）與標點符號，以利比對相似度"""
+              t = re.sub(r'[\-|–|—|\|].*?$', '', title)
+              return re.sub(r'[^\w\s]', '', t).strip().lower()
+
+          def is_similar(t1, t2, threshold=0.55):
+              """計算兩則標題的相似度比例（0.0 ~ 1.0）"""
+              n1 = normalize_title(t1)
+              n2 = normalize_title(t2)
+              # 若其中一方短標題完全包含在另一方，直接視為重複
+              if len(n1) > 6 and len(n2) > 6:
+                  if n1 in n2 or n2 in n1:
+                      return True
+              return difflib.SequenceMatcher(None, n1, n2).ratio() >= threshold
 
           def unwrap_google_url(url):
               if not url:
@@ -114,13 +129,22 @@ jobs:
               except Exception as e:
                   print(f"Error fetching {rss_url}: {e}")
 
+          # 先依照發布日期降序排序（讓最新的優先被納入）
           all_items.sort(key=lambda x: x["date"], reverse=True)
-          final_items = all_items[:15]
+
+          # 去重過濾：如果這則新聞與已經收錄的新聞相似度過高，就跳過
+          deduped_items = []
+          for item in all_items:
+              if any(is_similar(item["title"], kept["title"]) for kept in deduped_items):
+                  continue
+              deduped_items.append(item)
+              if len(deduped_items) >= 15:
+                  break
 
           tw_tz = timezone(timedelta(hours=8))
           payload = {
               "updatedAt": datetime.now(tw_tz).strftime("%Y-%m-%d %H:%M:%S"),
-              "items": final_items
+              "items": deduped_items
           }
 
           with open("news.json", "w", encoding="utf-8") as f:
@@ -130,5 +154,5 @@ jobs:
       - name: Commit and push news.json
         run: |
           git add news.json
-          git diff --staged --quiet || git commit -m "chore: update merged news.json"
+          git diff --staged --quiet || git commit -m "chore: update deduplicated news.json"
           git push origin HEAD:main
