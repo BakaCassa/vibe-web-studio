@@ -1,0 +1,109 @@
+env:
+  RSS_URL: "https://www.google.com/alerts/feeds/02437803316835037950/14970927714122536608"
+
+name: Update Google Alerts News
+
+on:
+  schedule:
+    # 台灣時間早上 8:00 (UTC+8) = UTC 00:00
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch RSS and generate news.json
+        run: |
+          python3 - << 'EOF'
+          import os, json, re, html, urllib.request, urllib.parse
+          import xml.etree.ElementTree as ET
+          from datetime import datetime, timezone, timedelta
+
+          rss_url = os.environ.get("RSS_URL")
+          req = urllib.request.Request(rss_url, headers={"User-Agent": "Mozilla/5.0"})
+          with urllib.request.urlopen(req, timeout=30) as resp:
+              xml_data = resp.read()
+
+          root = ET.fromstring(xml_data)
+          ns = {"atom": "http://www.w3.org/2005/Atom"}
+
+          def clean_text(raw):
+              if not raw:
+                  return ""
+              text = html.unescape(raw)
+              text = re.sub(r"<[^>]+>", "", text)
+              return re.sub(r"\s+", " ", text).strip()
+
+          def unwrap_google_url(url):
+              if not url:
+                  return "#"
+              try:
+                  parsed = urllib.parse.urlparse(url)
+                  qs = urllib.parse.parse_qs(parsed.query)
+                  if "url" in qs and qs["url"]:
+                      return qs["url"][0]
+              except Exception:
+                  pass
+              return url
+
+          items = []
+          entries = root.findall("atom:entry", ns) or root.findall(".//item")
+
+          for entry in entries[:10]:
+              title_el = entry.find("atom:title", ns)
+              if title_el is None:
+                  title_el = entry.find("title")
+              title = clean_text(title_el.text if title_el is not None else "無標題")
+
+              link = "#"
+              link_el = entry.find("atom:link", ns)
+              if link_el is not None and "href" in link_el.attrib:
+                  link = unwrap_google_url(link_el.attrib["href"])
+              else:
+                  link_el = entry.find("link")
+                  if link_el is not None and link_el.text:
+                      link = unwrap_google_url(link_el.text.strip())
+
+              date_el = entry.find("atom:published", ns)
+              if date_el is None:
+                  date_el = entry.find("atom:updated", ns)
+              if date_el is None:
+                  date_el = entry.find("pubDate")
+              pub_date = (date_el.text.strip()[:10] if (date_el is not None and date_el.text) else "")
+
+              content_el = entry.find("atom:content", ns)
+              if content_el is None:
+                  content_el = entry.find("description")
+              summary = clean_text(content_el.text if content_el is not None else "")
+
+              items.append({
+                  "title": title,
+                  "link": link,
+                  "date": pub_date,
+                  "summary": summary
+              })
+
+          tw_tz = timezone(timedelta(hours=8))
+          payload = {
+              "updatedAt": datetime.now(tw_tz).strftime("%Y-%m-%d %H:%M:%S"),
+              "items": items
+          }
+
+          with open("news.json", "w", encoding="utf-8") as f:
+              json.dump(payload, f, ensure_ascii=False, indent=2)
+          EOF
+
+      - name: Commit and push news.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add news.json
+          git diff --staged --quiet || git commit -m "chore: update news.json"
+          git push
