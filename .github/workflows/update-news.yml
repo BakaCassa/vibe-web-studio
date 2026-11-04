@@ -41,6 +41,13 @@ jobs:
 
           all_items = []
 
+          def find_first(element, tags, ns):
+              for tag in tags:
+                  found = element.find(tag, ns)
+                  if found is not None:
+                      return found
+              return None
+
           def get_text(element):
               if element is None:
                   return ""
@@ -51,6 +58,7 @@ jobs:
                   return ""
               text = html.unescape(raw)
               text = re.sub(r"<[^>]+>", "", text)
+              text = html.unescape(text)
               return re.sub(r"\s+", " ", text).strip()
 
           def unwrap_google_url(url):
@@ -73,10 +81,12 @@ jobs:
 
                   root = ET.fromstring(xml_data)
                   ns = {"atom": "http://www.w3.org/2005/Atom"}
-                  entries = root.findall("atom:entry", ns) or root.findall(".//item")
+                  entries = root.findall("atom:entry", ns)
+                  if not entries:
+                      entries = root.findall(".//item")
 
                   for entry in entries:
-                      title_el = entry.find("atom:title", ns) or entry.find("title")
+                      title_el = find_first(entry, ["atom:title", "title"], ns)
                       raw_title = get_text(title_el)
                       title = clean_text(raw_title) if raw_title else "無標題"
 
@@ -89,10 +99,10 @@ jobs:
                           if le is not None and le.text:
                               link = unwrap_google_url(le.text.strip())
 
-                      date_el = entry.find("atom:published", ns) or entry.find("atom:updated", ns) or entry.find("pubDate")
+                      date_el = find_first(entry, ["atom:published", "atom:updated", "pubDate"], ns)
                       pub_date = (date_el.text.strip()[:10] if (date_el is not None and date_el.text) else "")
 
-                      content_el = entry.find("atom:content", ns) or entry.find("description")
+                      content_el = find_first(entry, ["atom:content", "atom:summary", "description"], ns)
                       summary = clean_text(get_text(content_el))
 
                       all_items.append({
