@@ -874,7 +874,7 @@
       }
     });
 
-    // 讀取 news.json 並渲染最新消息
+   // 讀取 news.json 並渲染合併後的最新消息
     async function loadNews() {
       const container = document.getElementById('newsContainer');
       const updatedEl = document.getElementById('newsUpdatedAt');
@@ -915,7 +915,7 @@
         `).join('');
       } catch (e) {
         if (updatedEl) updatedEl.textContent = 'WAITING FOR SYNC';
-        container.innerHTML = '<div class="text-xs font-mono text-gray-400">尚無新聞資料（請先至 GitHub Actions 執行 Update Google Alerts News 產生 news.json）。</div>';
+        container.innerHTML = '<div class="text-xs font-mono text-gray-400">尚無新聞資料（請先至 GitHub Actions 手動執行一次）。</div>';
       }
     }
 
