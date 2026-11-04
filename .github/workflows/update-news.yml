@@ -18,6 +18,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Pull latest changes before generating file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin main
 
       - name: Fetch RSS and generate news.json
         run: |
@@ -100,9 +109,8 @@ jobs:
               json.dump(payload, f, ensure_ascii=False, indent=2)
           EOF
 
-     - name: Commit and push news.json
+      - name: Commit and push news.json
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add news.json
-          git diff --staged --quiet || (git commit -m "chore: update news.json" && git pull --rebase origin main && git push)
+          git diff --staged --quiet || git commit -m "chore: update news.json"
+          git push origin HEAD:main
