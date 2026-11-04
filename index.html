@@ -176,9 +176,9 @@
           Home
         </a>
 
-        <button onclick="openComingSoon('News')" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-yellow transition flex items-center gap-1">
-          News <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
-        </button>
+        <a href="#news" onclick="playBeep(500)" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-yellow transition flex items-center gap-1 font-bold">
+          News <span class="text-[9px] bg-emerald-700 text-white px-1 font-sans font-bold">LIVE</span>
+        </a>
 
         <button onclick="openComingSoon('Tools')" class="win98-btn px-2.5 py-1 text-xs font-pixel text-gray-800 bg-[#d4d0c8] hover:bg-y2k-green transition flex items-center gap-1">
           Tools <span class="text-[9px] bg-red-600 text-white px-1 font-sans font-bold">SOON</span>
@@ -367,6 +367,27 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- NEWS SECTION (新增：Google 快訊最新消息區塊) -->
+    <section id="news" class="space-y-3">
+      <!-- Section Header -->
+      <div class="flex items-center gap-3">
+        <span class="w-4 h-4 bg-y2k-yellow inline-block border-2 border-black"></span>
+        <h2 class="font-pixel text-lg sm:text-xl text-y2k-yellow tracking-wider">NEWS // 最新消息</h2>
+        <div class="flex-1 h-0.5 bg-gradient-to-r from-y2k-yellow to-transparent"></div>
+      </div>
+
+      <div class="win98-window p-3 border-2 border-black">
+        <div class="win98-titlebar px-2 py-1 flex justify-between items-center mb-3">
+          <span class="text-white font-pixel text-xs">GOOGLE_ALERTS_FEED.JSON</span>
+          <span id="newsUpdatedAt" class="text-y2k-yellow font-vt text-base">SYNCING...</span>
+        </div>
+
+        <div id="newsContainer" class="bg-black p-4 border border-gray-700 space-y-3 max-h-96 overflow-y-auto">
+          <div class="text-xs font-mono text-gray-400">正在讀取最新消息 (news.json)...</div>
+        </div>
       </div>
     </section>
 
@@ -853,8 +874,54 @@
       }
     });
 
+    // 讀取 news.json 並渲染最新消息
+    async function loadNews() {
+      const container = document.getElementById('newsContainer');
+      const updatedEl = document.getElementById('newsUpdatedAt');
+      if (!container) return;
+
+      try {
+        const res = await fetch('news.json?t=' + Date.now());
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        const items = Array.isArray(data) ? data : (data.items || []);
+
+        if (data.updatedAt && updatedEl) {
+          updatedEl.textContent = 'UPDATED: ' + data.updatedAt;
+        } else if (updatedEl) {
+          updatedEl.textContent = 'STATUS: ONLINE';
+        }
+
+        if (items.length === 0) {
+          container.innerHTML = '<div class="text-xs font-mono text-gray-400">目前尚無快訊新聞。</div>';
+          return;
+        }
+
+        const escapeHTML = (str) => String(str || '').replace(/[&<>'"]/g, tag => (
+          { '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]
+        ));
+
+        container.innerHTML = items.map(item => `
+          <a href="${escapeHTML(item.link)}" target="_blank" rel="noopener noreferrer"
+             class="block bg-gray-900/90 border border-gray-700 hover:border-y2k-cyan p-3 transition group">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+              <h3 class="text-sm sm:text-base font-bold text-y2k-cyan group-hover:text-y2k-yellow transition">
+                ▶ ${escapeHTML(item.title)}
+              </h3>
+              <span class="text-[11px] font-mono text-gray-400 shrink-0">${escapeHTML(item.date)}</span>
+            </div>
+            ${item.summary ? `<p class="text-xs text-gray-300 leading-relaxed line-clamp-2">${escapeHTML(item.summary)}</p>` : ''}
+          </a>
+        `).join('');
+      } catch (e) {
+        if (updatedEl) updatedEl.textContent = 'WAITING FOR SYNC';
+        container.innerHTML = '<div class="text-xs font-mono text-gray-400">尚無新聞資料（請先至 GitHub Actions 執行 Update Google Alerts News 產生 news.json）。</div>';
+      }
+    }
+
     // Add interactive click sounds to all buttons and links
     document.addEventListener('DOMContentLoaded', () => {
+      loadNews();
       const interactives = document.querySelectorAll('button, a');
       interactives.forEach(el => {
         el.addEventListener('mouseenter', () => {
