@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 個人網站首頁 (index.html) -->
+  <url>
+    <loc>https://bakacassa.github.io/vibe-web-studio/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 霓虹乒乓小遊戲 (game.html) -->
+  <url>
+    <loc>https://bakacassa.github.io/vibe-web-studio/game.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 連線猜拳大亂鬥 (rps.html) -->
+  <url>
+    <loc>https://bakacassa.github.io/vibe-web-studio/rps.html</loc>
+    <lastmod>2026-11-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
