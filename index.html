@@ -4,6 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wei Lun Chien | Personal Homepage</title>
+  <meta name="description" content="Wei Lun Chien（大同大學資工系）的個人網站，分享動漫、文字冒險遊戲與日常點滴。">
+  <link rel="canonical" href="https://bakacassa.github.io/vibe-web-studio/">
+
+  <!-- Favicon & Mobile Home Screen Icon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <!-- Open Graph (LINE / Facebook / Discord) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Wei Lun Chien | Personal Homepage">
+  <meta property="og:title" content="Wei Lun Chien | Personal Homepage">
+  <meta property="og:description" content="Wei Lun Chien（大同大學資工系）的個人網站，分享動漫、文字冒險遊戲與日常點滴。">
+  <meta property="og:url" content="https://bakacassa.github.io/vibe-web-studio/">
+  <meta property="og:image" content="https://bakacassa.github.io/vibe-web-studio/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="zh_TW">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Wei Lun Chien | Personal Homepage">
+  <meta name="twitter:description" content="Wei Lun Chien（大同大學資工系）的個人網站，分享動漫、文字冒險遊戲與日常點滴。">
+  <meta name="twitter:image" content="https://bakacassa.github.io/vibe-web-studio/og.jpg">
   
   <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9Q721D0PL"></script>
@@ -250,9 +273,14 @@
               PLAYER 1 READY
             </div>
             
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-pixel tracking-wider leading-tight text-transparent bg-clip-text bg-gradient-to-r from-y2k-cyan via-white to-y2k-pink drop-shadow-[2px_2px_0px_#000]">
-              Wei Lun Chien
-            </h1>
+            <div class="space-y-2">
+              <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-pixel tracking-wider leading-tight text-transparent bg-clip-text bg-gradient-to-r from-y2k-cyan via-white to-y2k-pink drop-shadow-[2px_2px_0px_#000]">
+                Wei Lun Chien
+              </h1>
+              <p class="text-sm sm:text-base text-y2k-cyan font-bold tracking-wide bg-black/50 border border-y2k-cyan/40 px-3 py-1.5 inline-block">
+                Wei Lun Chien（大同大學資工系）的個人網站，分享動漫、文字冒險遊戲與日常點滴。
+              </p>
+            </div>
 
             <div class="border-l-4 border-y2k-yellow pl-3 py-1">
               <p class="font-vt text-2xl sm:text-3xl text-y2k-yellow tracking-wide leading-none">
@@ -300,6 +328,39 @@
               <a href="https://bakacassa.github.io/vibe-web-studio/rps.html" onclick="playBeep(740)" class="pixel-btn bg-y2k-green text-black px-3.5 py-2 font-pixel text-xs flex items-center gap-2 font-bold hover:bg-white transition">
                 <span>✊</span> 連線猜拳亂鬥
               </a>
+            </div>
+
+            <!-- Share Buttons (LINE / Facebook / 手機分享或電腦複製網址) -->
+            <div class="pt-3 border-t border-purple-900/80">
+              <span class="text-[10px] font-pixel text-gray-400 block mb-2">✦ SHARE THIS PAGE // 分享個人網站</span>
+              <div class="flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onclick="shareToLine()"
+                  class="pixel-btn bg-[#06C755] text-black px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 hover:bg-white transition"
+                >
+                  <span>💬</span> LINE 分享
+                </button>
+                <button
+                  type="button"
+                  onclick="shareToFacebook()"
+                  class="pixel-btn bg-[#1877F2] text-white px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 hover:bg-y2k-cyan hover:text-black transition"
+                >
+                  <span>📘</span> Facebook 分享
+                </button>
+                <button
+                  id="nativeOrCopyShareBtn"
+                  type="button"
+                  onclick="handleDeviceShare()"
+                  class="pixel-btn bg-y2k-win-gray text-black px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 hover:bg-y2k-yellow transition"
+                >
+                  <span id="shareBtnIcon">🔗</span>
+                  <span id="shareBtnLabel">複製網址</span>
+                </button>
+                <span id="shareToast" class="hidden text-xs font-pixel text-y2k-green bg-black/80 px-2 py-1 border border-y2k-green">
+                  ✓ 已複製網址！
+                </span>
+              </div>
             </div>
 
           </div>
@@ -774,6 +835,11 @@
   </div>
 
   <script>
+    // 分享資訊常數設定
+    const SITE_URL = 'https://bakacassa.github.io/vibe-web-studio/';
+    const SITE_TITLE = 'Wei Lun Chien | Personal Homepage';
+    const SITE_DESC = 'Wei Lun Chien（大同大學資工系）的個人網站，分享動漫、文字冒險遊戲與日常點滴。';
+
     // Audio Context for 8-bit sound effects (Web Audio API)
     let audioCtx = null;
     let soundEnabled = true;
@@ -829,6 +895,73 @@
       }
     }
 
+    // 分享功能：LINE、Facebook、手機原生分享 / 電腦複製網址
+    function isMobileDevice() {
+      return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    }
+
+    function setupShareButtonLabel() {
+      const iconEl = document.getElementById('shareBtnIcon');
+      const labelEl = document.getElementById('shareBtnLabel');
+      if (!iconEl || !labelEl) return;
+
+      if (isMobileDevice() && navigator.share) {
+        iconEl.textContent = '📲';
+        labelEl.textContent = '手機分享';
+      } else {
+        iconEl.textContent = '🔗';
+        labelEl.textContent = '複製網址';
+      }
+    }
+
+    function shareToLine() {
+      playBeep(620, 'square', 0.08);
+      const lineShareUrl = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(SITE_URL);
+      window.open(lineShareUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    function shareToFacebook() {
+      playBeep(580, 'square', 0.08);
+      const fbShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(SITE_URL);
+      window.open(fbShareUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    async function handleDeviceShare() {
+      playBeep(700, 'triangle', 0.1);
+      if (isMobileDevice() && navigator.share) {
+        try {
+          await navigator.share({
+            title: SITE_TITLE,
+            text: SITE_DESC,
+            url: SITE_URL
+          });
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+      }
+
+      // 電腦上或不支援系統分享時，自動複製網址
+      try {
+        await navigator.clipboard.writeText(SITE_URL);
+      } catch (e) {
+        const tempInput = document.createElement('input');
+        tempInput.value = SITE_URL;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      }
+
+      const toast = document.getElementById('shareToast');
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 2500);
+      }
+    }
+
     // Coming Soon Modal handlers
     function openComingSoon(categoryName) {
       playBeep(330, 'sawtooth', 0.1);
@@ -874,7 +1007,7 @@
       }
     });
 
-   // 讀取 news.json 並渲染合併後的最新消息
+    // 讀取 news.json 並渲染合併後的最新消息
     async function loadNews() {
       const container = document.getElementById('newsContainer');
       const updatedEl = document.getElementById('newsUpdatedAt');
@@ -921,6 +1054,7 @@
 
     // Add interactive click sounds to all buttons and links
     document.addEventListener('DOMContentLoaded', () => {
+      setupShareButtonLabel();
       loadNews();
       const interactives = document.querySelectorAll('button, a');
       interactives.forEach(el => {
