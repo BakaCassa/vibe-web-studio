@@ -1,95 +1,95 @@
 {
-  "updatedAt": "2026-11-18 14:21:14",
+  "updatedAt": "2026-11-19 14:23:06",
   "items": [
     {
+      "title": "Today I learned a single Google Gemini query uses about five drops of water, but that's not ...",
+      "link": "https://www.techradar.com/pro/today-i-learned-a-single-google-gemini-query-uses-about-five-drops-of-water-but-thats-not-the-whole-truth",
+      "date": "2026-11-19",
+      "summary": "Google says a Gemini text prompt uses about five drops of water. Researchers say the real figure is far higher once you count water used by power ..."
+    },
+    {
+      "title": "Google released another Gemini 4 model. - The Verge",
+      "link": "https://www.theverge.com/tech/1037150/google-released-another-gemini-4-model",
+      "date": "2026-11-19",
+      "summary": "Following Argon, Carbon, and Hydrogen, Google has announced Gemini 4 Neon, which brings “frontier-level intelligence with fast end-to-end task ..."
+    },
+    {
+      "title": "Gemini 4 Neon is ready to get some work done for AI Pro power users - Android Authority",
+      "link": "https://www.androidauthority.com/gemini-4-neon-3736931/",
+      "date": "2026-11-19",
+      "summary": "Google positions Neon as a balance between the performance and cost of Carbon and Hydrogen. Lately Google has been cranking out some of its most ..."
+    },
+    {
+      "title": "Explore & Shop Smart Devices & Nest Products - Google Home",
+      "link": "https://home.google.com/us/explore-devices",
+      "date": "2026-11-19",
+      "summary": "Google Home seamlessly brings together all of your compatible smart devices made by Google ... Things to try with Gemini for Home voice assistant. Learn ..."
+    },
+    {
+      "title": "Gemini 4 Neon Model Evaluation - Googleapis.com",
+      "link": "https://storage.googleapis.com/deepmind-media/gemini/gemini_4_neon_model_evaluation.pdf",
+      "date": "2026-11-19",
+      "summary": "We evaluated Gemini 4 Neon across a range of benchmarks, including agentic coding, knowledge work, multimodal understanding, science and math, and ..."
+    },
+    {
+      "title": "Gemini 4 Neon in GitHub Copilot - GitHub Changelog",
+      "link": "https://github.blog/changelog/2026-11-18-gemini-4-neon-in-github-copilot/",
+      "date": "2026-11-19",
+      "summary": "Google also reports that, compared with Gemini 4 Carbon, it starts responding faster and makes fewer unrequested changes on coding tasks. It is also ..."
+    },
+    {
+      "title": "Google launches Gemini 4 Neon, claims it's three times faster than Carbon - Neowin",
+      "link": "https://www.neowin.net/news/google-launches-gemini-4-neon-claims-its-three-times-faster-than-carbon/",
+      "date": "2026-11-19",
+      "summary": "Google says its new Gemini 4 Neon can outperform its flagship Carbon model in some benchmarks. But the pricing situation is a little unusual right ..."
+    },
+    {
+      "title": "Google's Gemini 4 Neon tripled its coding score without changing the model",
+      "link": "https://thenewstack.io/gemini-neon-antigravity-harness/",
+      "date": "2026-11-19",
+      "summary": "Gemini 4 Neon scored 12.8% on SWE-sweep alone but 39% inside Antigravity — a jump that shows how much a coding agent's harness shapes its ..."
+    },
+    {
+      "title": "Gemini Live is Google Home's next upgrade project, yet only subscribers can enjoy it",
+      "link": "https://www.androidcentral.com/accessories/smart-home/gemini-live-is-google-homes-next-upgrade-project-yet-only-subscribers-can-enjoy-it",
+      "date": "2026-11-19",
+      "summary": "Additionally, Google is taking Gemini Live from a quick assistant to one that can help users brainstorm dinner plans, trips, and more with \"Hey Gemini ..."
+    },
+    {
+      "title": "Ex-Google Engineer May Face New Charges Over Bets on Gemini 3.0 - Bloomberg.com",
+      "link": "https://www.bloomberg.com/news/articles/2026-11-18/ex-google-engineer-may-face-new-charges-over-bets-on-gemini-3-0",
+      "date": "2026-11-19",
+      "summary": "A former Google software engineer accused of making an illegal bet on Polymarket about company search data may face additional charges that he ..."
+    },
+    {
+      "title": "Meet Gemini 4 Neon – bringing frontier-level intelligence with fast task completion ... - Instagram",
+      "link": "https://www.instagram.com/p/Df5pHDvkSVE/",
+      "date": "2026-11-19",
+      "summary": "May be a graphic of text. Photo by Google DeepMind on November 18, 2026. May be an image ..."
+    },
+    {
+      "title": "【原神×マック】ボカロ曲『終わってる料理番組』とコラボ!? 唐揚げと卵からガムが生まれるカオス ...",
+      "link": "https://dengekionline.com/article/202611/94403",
+      "date": "2026-11-18",
+      "summary": "イラストの立ち位置からすると、料理役（初音ミク役）がエスコフィエで、ツッコミ役（重音テト役）がヴァレサの様子。 新たなコラボの公開は11月19日8時を予定。"
+    },
+    {
+      "title": "指先にちょこんと乗る6人のバーチャルシンガー！セガ フェイブ「初音ミク」シリーズ ふわぷち ...",
+      "link": "https://news.livedoor.com/article/detail/32839660/",
+      "date": "2026-11-18",
+      "summary": "記事ポイント『初音ミク』シリーズのふわぷち フィンガーマスコットは、三月八日さんデザイン。初音ミク・鏡音リン・鏡音レン・巡音ルカ・MEIKO・KAITOを ..."
+    },
+    {
+      "title": "【ボーカロイド音楽専門レーベル「KARENT」配信情報】11月12日（木）～11月18日（水）に9 ...",
+      "link": "https://prtimes.jp/main/html/rd/p/000000731.000052709.html",
+      "date": "2026-11-18",
+      "summary": "クリプトン・フューチャー・メディア株式会社のプレスリリース（2026年11月18日 17時30分）【ボーカロイド音楽専門レーベル「KARENT」配信情報】11月12 ..."
+    },
+    {
       "title": "【ビルボード】“ニコニコ VOCALOID SONGS TOP20”、東京真中「メモリ」首位デビュー",
-      "link": "https://news.yahoo.co.jp/articles/e6de984e90d00ddfc13193747255b440a201665a",
+      "link": "https://news.yahoo.co.jp/articles/e6de984e90d00ddfc13193747255b440a201665a/images/000",
       "date": "2026-11-18",
-      "summary": "2026年11月18日公開（集計期間：2026年11月9日～11月15日）のBillboard JAPAN“ニコニコ VOCALOID SONGS TOP20”で、東京真中「メモリ」が首位を獲得した."
-    },
-    {
-      "title": "キタニタツヤ、松丸亮吾が推薦！ 音楽家・Neru初のエッセイ『ハウトゥー世界征服』2026年11月 ...",
-      "link": "https://group.kadokawa.co.jp/information/promotional_topics/article-16132.html",
-      "date": "2026-11-18",
-      "summary": "音楽家・ボカロP。VOCALOIDを用いた楽曲制作を中心に活動し、「ロストワンの号哭」「東京テディベア」「脱法ロック」など数多くの作品を発表。鋭い言葉と ..."
-    },
-    {
-      "title": "Google Makes Tasks in Gemini Free and Adds Calls and Payments - Unite.AI",
-      "link": "https://www.unite.ai/google-makes-tasks-in-gemini-free-and-adds-calls-and-payments/",
-      "date": "2026-11-18",
-      "summary": "In Google's dealership example, Gemini used Maps to find nearby shops, called two dealerships simultaneously, checked Calendar availability and booked ..."
-    },
-    {
-      "title": "Gemini can now handle task requests for free, including calls to businesses on your behalf",
-      "link": "https://www.androidauthority.com/google-gemini-tasks-update-3736266/",
-      "date": "2026-11-18",
-      "summary": "Google expands Tasks to call businesses on a user's behalf, schedule appointments, and make purchases. · Users can also text and email tasks to Gemini ..."
-    },
-    {
-      "title": "I turned my phone into a hands-free productivity machine with 4 Gemini voice commands",
-      "link": "https://www.androidpolice.com/gemini-voice-phone-hands-free-productivity/",
-      "date": "2026-11-18",
-      "summary": "Google Keep grocery checklist with Gemini voice input and app icons. Credit: Lucas Gouveia / Android Police."
-    },
-    {
-      "title": "When AI Answers: Michigan - Digital Democracy Institute of the Americas (DDIA)",
-      "link": "https://ddia.org/en/when-ai-answers-michigan",
-      "date": "2026-11-18",
-      "summary": "Gemini correctly stated that El-Sayed doesn't call himself a socialist. Further down, in its Spanish answer, Google's system said the Democrat's ideas ..."
-    },
-    {
-      "title": "You Can Now See And Edit What Google Gemini Remembers About You - Engadget",
-      "link": "https://www.engadget.com/2315475/google-gemini-memory-summary-see-what-remembers-about-you/",
-      "date": "2026-11-18",
-      "summary": "The Memory summary windows in Gemini's Settings menu. Ian Carlos Campbell for Engadget. If you're in the US, have a paid Google AI plan and memory is ..."
-    },
-    {
-      "title": "木屋町氏がデザインしたはちみつをイメージしたキュートな装いの「初音ミク」が「ぬースト」で ...",
-      "link": "https://news.yahoo.co.jp/articles/0d84315eec5198a8d8763de0667ded4a9df3ddf7",
-      "date": "2026-11-17",
-      "summary": "フリューは、イラストレーターの木屋町氏がデザインした初音ミクの「ぬーどるストッパーフィギュア」を2027年5月ごろに展開予定であることを発表した。"
-    },
-    {
-      "title": "Go Ahead and Text or Email With Gemini to Do Your Tasks - Droid Life",
-      "link": "https://www.droid-life.com/2026/11/17/go-ahead-and-text-or-email-with-gemini-to-do-your-tasks/",
-      "date": "2026-11-17",
-      "summary": "The VP of Google who shared the news said they own a 2019 minivan that had a check engine light recently come on. Instead of calling around the ..."
-    },
-    {
-      "title": "I checked Gemini's new Memory summary — and it's surprising how much AI can remember ...",
-      "link": "https://www.techradar.com/ai-platforms-assistants/i-checked-geminis-new-memory-summary-and-its-surprising-how-much-ai-can-remember-about-you",
-      "date": "2026-11-17",
-      "summary": "Google Gemini can build a detailed memory of its users over many conversations, boosted by its access to your Google accounts and ability to ..."
-    },
-    {
-      "title": "Google on X",
-      "link": "https://x.com/Google/status/2122820914777845813",
-      "date": "2026-11-17",
-      "summary": "Gemini 4 Hydrogen is live in Google Search globally Our biggest model upgrade to Search yet brings: Better understanding of your intent ..."
-    },
-    {
-      "title": "Google to Keep AI Chat Logs for Two Months, Even With Gemini History Turned Off",
-      "link": "https://gizmodo.com/google-to-keep-ai-chat-logs-for-two-months-even-with-gemini-history-turned-off-2000841271",
-      "date": "2026-11-17",
-      "summary": "Previously, the company retained user messages with the chatbot for 72 hours, according to an archived version of Google's Gemini Apps Privacy Hub, ..."
-    },
-    {
-      "title": "GM Integrates Google Gemini Into Vehicles in Mexico",
-      "link": "https://mexicobusiness.news/automotive/news/gm-integrates-google-gemini-vehicles-mexico",
-      "date": "2026-11-17",
-      "summary": "General Motors (GM) is introducing Google's Gemini artificial intelligence (AI) assistant in compatible vehicles in Mexico, allowing drivers to ..."
-    },
-    {
-      "title": "Author says Google Gemini falsely linked him to assault | CBC.ca",
-      "link": "https://www.cbc.ca/player/play/audio/9.7425700",
-      "date": "2026-11-17",
-      "summary": "When an artificial intelligence model makes a mistake it can be funny - like an image with a person who has extra fingers."
-    },
-    {
-      "title": "Tasks in Gemini make Google's assistant handle all your chores for you - XDA Developers",
-      "link": "https://www.xda-developers.com/tasks-gemini-announcement/",
-      "date": "2026-11-17",
-      "summary": "The real benefit is if you already use Google's services, such as Maps or Wallet, as Gemini can tap into them to make its decisions. Here's an example ..."
+      "summary": "【ビルボード】“ニコニコ VOCALOID SONGS TOP20”、東京真中「メモリ」首位デビュー."
     }
   ]
 }
