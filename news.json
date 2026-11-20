@@ -1,95 +1,95 @@
 {
-  "updatedAt": "2026-11-19 14:23:06",
+  "updatedAt": "2026-11-20 14:07:40",
   "items": [
     {
-      "title": "Today I learned a single Google Gemini query uses about five drops of water, but that's not ...",
-      "link": "https://www.techradar.com/pro/today-i-learned-a-single-google-gemini-query-uses-about-five-drops-of-water-but-thats-not-the-whole-truth",
+      "title": "You can finally use Google Gemini to control your MacBook - Mashable",
+      "link": "https://mashable.com/tech/google-gemini-control-macbook-apple",
+      "date": "2026-11-20",
+      "summary": "For example, Google just announced that you can now use Gemini AI to control a Mac computer. With this new feature, you can give Gemini commands and ..."
+    },
+    {
+      "title": "Google lets Gemini agents load tool instructions on demand instead of all at once",
+      "link": "https://superpowerdaily.com/posts/google-lets-gemini-agents-load-tool-instructions-on-demand-instead-of-all-at-once",
+      "date": "2026-11-20",
+      "summary": "Google's preview feature, Tool Retrieval, lets Gemini agents keep function input schemas out of context until a task requires them."
+    },
+    {
+      "title": "Google makes Gemini Tasks free in six countries and adds Workspace integration",
+      "link": "https://www.online-tech-tips.com/google-gemini-tasks-free-six-countries-workspace/",
+      "date": "2026-11-20",
+      "summary": "On November 17, 2026, Google announced free Tasks in Gemini for errands like adding school dates to a calendar. Check your country first: Google's ..."
+    },
+    {
+      "title": "流水、2作目のオリジナル楽曲「ギャラリー」配信リリース ボカロP 是が作詞作曲＆編曲を担当",
+      "link": "https://news.livedoor.com/article/detail/32855984/",
       "date": "2026-11-19",
-      "summary": "Google says a Gemini text prompt uses about five drops of water. Researchers say the real figure is far higher once you count water used by power ..."
+      "summary": "本楽曲は、ボカロP 是が作詞、作曲、編曲を担当。また、MVは熊谷芙美子が手掛けた。うまく言葉にできない複雑な感情、答えのない感情を、激しさの中にも ..."
     },
     {
-      "title": "Google released another Gemini 4 model. - The Verge",
-      "link": "https://www.theverge.com/tech/1037150/google-released-another-gemini-4-model",
+      "title": "続報！【奏の森リゾート×初音ミク】コラボ第3弾の詳細決定 - PR TIMES",
+      "link": "https://prtimes.jp/main/html/rd/p/000000335.000078302.html",
       "date": "2026-11-19",
-      "summary": "Following Argon, Carbon, and Hydrogen, Google has announced Gemini 4 Neon, which brings “frontier-level intelligence with fast end-to-end task ..."
+      "summary": "第1弾・第2弾で、多くの来場者を魅了した「奏の森リゾート×初音ミク」コラボレーション第3弾の開催を決定いたしました。今年は伊豆急行・熱川バナナワニ園 ..."
     },
     {
-      "title": "Gemini 4 Neon is ready to get some work done for AI Pro power users - Android Authority",
-      "link": "https://www.androidauthority.com/gemini-4-neon-3736931/",
+      "title": "Google Upgrades Gemini for Mac With Computer Use To Click, Type, and Fill Forms",
+      "link": "https://newscord.org/article/google-upgrades-gemini-for-mac-with-computer-use-to-click-type-and-fill-forms--Story_20261119_GooglegivesGeminithe4b5ab3db",
       "date": "2026-11-19",
-      "summary": "Google positions Neon as a balance between the performance and cost of Carbon and Hydrogen. Lately Google has been cranking out some of its most ..."
+      "summary": "Gemini takes over Mac tasks. Google is upgrading the Gemini app on Mac with a computer use feature that lets the assistant click, type, navigate menus ..."
     },
     {
-      "title": "Explore & Shop Smart Devices & Nest Products - Google Home",
-      "link": "https://home.google.com/us/explore-devices",
+      "title": "Gemini's Mac app can now click, type and fill forms across desktop apps for paying US subscribers",
+      "link": "https://mlq.ai/news/geminis-mac-app-can-now-click-type-and-fill-forms-across-desktop-apps-for-paying-us-subscribers/",
       "date": "2026-11-19",
-      "summary": "Google Home seamlessly brings together all of your compatible smart devices made by Google ... Things to try with Gemini for Home voice assistant. Learn ..."
+      "summary": "Google on Nov. 19 began rolling out computer use in the Gemini app for Mac, letting the assistant carry out multi-step tasks across local files, ..."
     },
     {
-      "title": "Gemini 4 Neon Model Evaluation - Googleapis.com",
-      "link": "https://storage.googleapis.com/deepmind-media/gemini/gemini_4_neon_model_evaluation.pdf",
+      "title": "Google Adds Computer Use to Gemini on Mac for Multi-Step Tasks - Unite.AI",
+      "link": "https://www.unite.ai/google-adds-computer-use-to-gemini-on-mac-for-multi-step-tasks/",
       "date": "2026-11-19",
-      "summary": "We evaluated Gemini 4 Neon across a range of benchmarks, including agentic coding, knowledge work, multimodal understanding, science and math, and ..."
+      "summary": "Google cautions that Gemini can make mistakes, permanently delete Workspace or computer files, and send or share files with third parties. It is ..."
     },
     {
-      "title": "Gemini 4 Neon in GitHub Copilot - GitHub Changelog",
-      "link": "https://github.blog/changelog/2026-11-18-gemini-4-neon-in-github-copilot/",
+      "title": "Kult built a gaming companion with Gemini that actually knows your game - Google Cloud",
+      "link": "https://cloud.google.com/blog/products/gaming/kult-built-a-gaming-companion-with-gemini-that-actually-knows-your-game",
       "date": "2026-11-19",
-      "summary": "Google also reports that, compared with Gemini 4 Carbon, it starts responding faster and makes fewer unrequested changes on coding tasks. It is also ..."
+      "summary": "Learn how Kult uses Gemini models and APIs to build an AI-powered gaming companion that provides real-time, low-latency assistance in your ear and ..."
     },
     {
-      "title": "Google launches Gemini 4 Neon, claims it's three times faster than Carbon - Neowin",
-      "link": "https://www.neowin.net/news/google-launches-gemini-4-neon-claims-its-three-times-faster-than-carbon/",
+      "title": "Google homepage rolling out AI-focused redesign that includes your Gemini chats [Video]",
+      "link": "https://9to5google.com/2026/11/19/google-search-homepage-gemini-sidebar-update/",
       "date": "2026-11-19",
-      "summary": "Google says its new Gemini 4 Neon can outperform its flagship Carbon model in some benchmarks. But the pricing situation is a little unusual right ..."
+      "summary": "Google's AI ambitions have been anything but subtle in their integration with Search, but Gemini and Search have had some clear separations. But, with ..."
     },
     {
-      "title": "Google's Gemini 4 Neon tripled its coding score without changing the model",
-      "link": "https://thenewstack.io/gemini-neon-antigravity-harness/",
+      "title": "Google just gave Gemini the run of your Mac — three days after Apple tightened the rules",
+      "link": "https://thenewstack.io/gemini-mac-computer-use/",
       "date": "2026-11-19",
-      "summary": "Gemini 4 Neon scored 12.8% on SWE-sweep alone but 39% inside Antigravity — a jump that shows how much a coding agent's harness shapes its ..."
+      "summary": "Google is adding computer use to the Gemini Mac app so the assistant works across apps, files and websites in a background window as you keep ..."
     },
     {
-      "title": "Gemini Live is Google Home's next upgrade project, yet only subscribers can enjoy it",
-      "link": "https://www.androidcentral.com/accessories/smart-home/gemini-live-is-google-homes-next-upgrade-project-yet-only-subscribers-can-enjoy-it",
+      "title": "Google brings computer use to Mac, letting Gemini handle chores without hijacking your screen",
+      "link": "https://www.androidauthority.com/gemini-mac-computer-use-3737396/",
       "date": "2026-11-19",
-      "summary": "Additionally, Google is taking Gemini Live from a quick assistant to one that can help users brainstorm dinner plans, trips, and more with \"Hey Gemini ..."
+      "summary": "Google is rolling out computer use to the Gemini app for Mac, allowing it to operate desktop apps and websites on your behalf. Gemini works in an ..."
     },
     {
-      "title": "Ex-Google Engineer May Face New Charges Over Bets on Gemini 3.0 - Bloomberg.com",
-      "link": "https://www.bloomberg.com/news/articles/2026-11-18/ex-google-engineer-may-face-new-charges-over-bets-on-gemini-3-0",
+      "title": "Google's Gemini App Can Now Operate Apple Desktop Computers - PYMNTS.com",
+      "link": "https://www.pymnts.com/news/artificial-intelligence/2026/googles-gemini-app-can-now-operate-apple-desktop-computers/",
       "date": "2026-11-19",
-      "summary": "A former Google software engineer accused of making an illegal bet on Polymarket about company search data may face additional charges that he ..."
+      "summary": "Google's Gemini app for Mac can now use that Apple computer to complete tasks across the user's local files, desktop apps and the web."
     },
     {
-      "title": "Meet Gemini 4 Neon – bringing frontier-level intelligence with fast task completion ... - Instagram",
-      "link": "https://www.instagram.com/p/Df5pHDvkSVE/",
+      "title": "I tried Perplexity as my Android assistant; it almost beat Gemini",
+      "link": "https://www.androidpolice.com/tried-perplexity-android-assistant-it-nearly-beat-gemini/",
       "date": "2026-11-19",
-      "summary": "May be a graphic of text. Photo by Google DeepMind on November 18, 2026. May be an image ..."
+      "summary": "A robotic hand holding an Android phone running Google AI Edge Gallery, with the Perplexity Credit: Lucas Gouveia / Android Police."
     },
     {
-      "title": "【原神×マック】ボカロ曲『終わってる料理番組』とコラボ!? 唐揚げと卵からガムが生まれるカオス ...",
-      "link": "https://dengekionline.com/article/202611/94403",
-      "date": "2026-11-18",
-      "summary": "イラストの立ち位置からすると、料理役（初音ミク役）がエスコフィエで、ツッコミ役（重音テト役）がヴァレサの様子。 新たなコラボの公開は11月19日8時を予定。"
-    },
-    {
-      "title": "指先にちょこんと乗る6人のバーチャルシンガー！セガ フェイブ「初音ミク」シリーズ ふわぷち ...",
-      "link": "https://news.livedoor.com/article/detail/32839660/",
-      "date": "2026-11-18",
-      "summary": "記事ポイント『初音ミク』シリーズのふわぷち フィンガーマスコットは、三月八日さんデザイン。初音ミク・鏡音リン・鏡音レン・巡音ルカ・MEIKO・KAITOを ..."
-    },
-    {
-      "title": "【ボーカロイド音楽専門レーベル「KARENT」配信情報】11月12日（木）～11月18日（水）に9 ...",
-      "link": "https://prtimes.jp/main/html/rd/p/000000731.000052709.html",
-      "date": "2026-11-18",
-      "summary": "クリプトン・フューチャー・メディア株式会社のプレスリリース（2026年11月18日 17時30分）【ボーカロイド音楽専門レーベル「KARENT」配信情報】11月12 ..."
-    },
-    {
-      "title": "【ビルボード】“ニコニコ VOCALOID SONGS TOP20”、東京真中「メモリ」首位デビュー",
-      "link": "https://news.yahoo.co.jp/articles/e6de984e90d00ddfc13193747255b440a201665a/images/000",
-      "date": "2026-11-18",
-      "summary": "【ビルボード】“ニコニコ VOCALOID SONGS TOP20”、東京真中「メモリ」首位デビュー."
+      "title": "Google for Developers on X: \"Gemini 4 brings fast, low-cost spatial reasoning to robotics ...",
+      "link": "https://x.com/googledevs/status/2123466599827173588",
+      "date": "2026-11-19",
+      "summary": "Gemini 4 brings fast, low-cost spatial reasoning to robotics. Pair it with the new Robotics plugin in Google @Antigravity to go from a robot in a ..."
     }
   ]
 }
