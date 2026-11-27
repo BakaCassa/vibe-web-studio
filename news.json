@@ -1,95 +1,95 @@
 {
-  "updatedAt": "2026-11-26 15:15:52",
+  "updatedAt": "2026-11-27 15:12:00",
   "items": [
     {
-      "title": "DeepMind Agents Now Run Part of Gemini Experiment Compute | AI Weekly",
-      "link": "https://aiweekly.co/alerts/deepmind-agents-now-run-part-of-gemini-experiment-compute",
+      "title": "Survey reveals the Google wake word readers actually prefer - Android Authority",
+      "link": "https://www.androidauthority.com/hey-google-hey-gemini-poll-results-3739640/",
+      "date": "2026-11-27",
+      "summary": "Google wants \"Hey Gemini\" to replace \"Hey Google,\" starting with Android XR. Here is how readers voted on their favorite Google wake word."
+    },
+    {
+      "title": "I paid $20 for Claude, but these 5 reasons explain why it couldn't beat Gemini on Android",
+      "link": "https://www.androidpolice.com/claude-paid-sub-cant-beat-gemini/",
+      "date": "2026-11-27",
+      "summary": "I've been using Google Gemini for over a year, and I pay $20 a month. What swayed me wasn't the AI features or the exclusivity of these models, ..."
+    },
+    {
+      "title": "ボカロPが公式サイトに実装した“ブラウザ音楽ツール”が話題に 本人に聞く制作背景と「問題意識」",
+      "link": "https://news.yahoo.co.jp/articles/d0f1e01036550b14f9f1c25a7c561c8328d95ab1",
       "date": "2026-11-26",
-      "summary": "AI agents at Google DeepMind now control part of the lab's compute budget to run experiments for upcoming Gemini models, research VP Koray ..."
+      "summary": "ここ十数年における、VOCALOIDを筆頭とした音声合成ソフトの急速な普及拡大で、DTM≒音楽創作は昔に比べずいぶん普遍的なクリエイティブ活動となった。"
     },
     {
-      "title": "Identifying Molecules with Mass Spec Skills for Antigravity - Google DeepMind",
-      "link": "https://deepmind.google/blog/interpreting-mass-spectra-with-google-antigravity/",
+      "title": "『プロジェクトセカイ カラフルステージ！ feat. 初音ミク』A4。さん、宮守文学さん ... - SEGA セガ",
+      "link": "https://www.sega.jp/topics/detail/261126_3/",
       "date": "2026-11-26",
-      "summary": "Mass Spec Skills for Google Antigravity pairs Gemini's chemical reasoning with established mass spectrometry tools to interpret tandem mass ..."
+      "summary": "株式会社セガと株式会社Colorful Paletteは、iOS/Android向けリズム&アドベンチャー『プロジェクトセカイ カラフルステージ！ feat. 初音ミク（以下、 ..."
     },
     {
-      "title": "Gemini adds separate controls for chat history and AI training - Online Tech Tips",
-      "link": "https://www.online-tech-tips.com/gemini-separate-chat-history-ai-training-controls/",
+      "title": "AI Shopping Bots Get a Shot at Proving $1 Trillion Hype This Holiday Season",
+      "link": "https://www.bloomberg.com/news/features/2026-11-26/holidays-to-test-ai-shopping-bots-from-google-amazon-meta-and-openai",
       "date": "2026-11-26",
-      "summary": "For Windows readers, Google's Gemini app announcement is the reference point. Wait for the controls to appear in your account before changing your ..."
+      "summary": "Google is determined to use its Gemini assistant to finally crack e-commerce after several failed attempts. Meta believes its popular Muse bot could ..."
     },
     {
-      "title": "Google for Developers on X: \"Gemini 4 Neon dropped and you swarmed it. Here are our ...",
-      "link": "https://x.com/googledevs/status/2125670791333515611",
+      "title": "Google Home expands Familiar Faces AI feature to more Onn cameras - Neowin",
+      "link": "https://www.neowin.net/news/google-home-expands-familiar-faces-ai-feature-to-more-onn-cameras/",
       "date": "2026-11-26",
-      "summary": "Google for Developers on X: \"Gemini 4 Neon dropped and you swarmed it. Here are our favorite /swarm builds from the community ↓\". Conversation."
+      "summary": "Google Home adds Familiar Faces support for two Onn cameras, Gemini Live improvements, remote siren controls and numerous bug fixes."
     },
     {
-      "title": "Google Home update brings Gemini interactive stories and faster commands - NewsBytes",
-      "link": "https://www.newsbytesapp.com/news/science/google-home-update-brings-gemini-interactive-stories-and-faster-commands/tldr",
+      "title": "Google Home Rolls Out Update with Better Gemini Live and Nest Camera Controls",
+      "link": "https://sammyguru.com/google-home-update-better-gemini-live-nest-camera-controls/",
       "date": "2026-11-26",
-      "summary": "Google Home's November 25 update enhances Nest Cam, Nest Thermostats, and Gemini, introducing improved smart home commands and new functionalities ..."
+      "summary": "Google Home's latest update brings faster Gemini Live, new Nest camera controls, easier thermostat scheduling, and several bug fixes."
     },
     {
-      "title": "The first AI opinion and the bargaining position it assumes (Like Company v Google, C‑250/25)",
-      "link": "https://blogs.law.ox.ac.uk/oblb/blog-post/2026/11/first-ai-opinion-and-bargaining-position-it-assumes-company-v-google-c-25025",
+      "title": "Signal Takes a Radical Step to Block Gemini and Siri From Reading Your Chats - It's FOSS",
+      "link": "https://itsfoss.com/news/signal-blocks-gemini-siri-ai/",
       "date": "2026-11-26",
-      "summary": "... Google (C‑250/25), the first case about generative AI to reach the Court. A Hungarian publisher sued Google over the Gemini chatbot, which answers ..."
+      "summary": "Using a privacy-focused messenger like Signal is a good idea, but AI assistants now baked into recent smartphones, such as Google's Gemini and Apple's ..."
     },
     {
-      "title": "\"Guided Vision in Gemini Live is now available on iOS. Open Live, point your camera, and ... - X",
-      "link": "https://x.com/GeminiApp/status/2125685936344236471",
+      "title": "Gemini 4 Neon: The Model Behind Paid Tasks in Gemini - OrcaRouter",
+      "link": "https://www.orcarouter.ai/blog/gemini-4-neon-tasks-in-gemini",
       "date": "2026-11-26",
-      "summary": "@GeminiApp · Google Gemini · Google · @GeminiApp. Guided Vision in Gemini Live is now available on iOS. Open Live, point your camera, and get real- ..."
+      "summary": "Google says Tasks in Gemini can now run on Gemini 4 Neon for AI Pro and Ultra, while free users stay on Hydrogen. What the upgrade scores and ..."
     },
     {
-      "title": "Google Gemini's KFC conversation takes an awkward turn after user threatens to switch to ChatGPT",
-      "link": "https://www.businesstoday.in/technology/news/story/google-geminis-kfc-conversation-takes-an-awkward-turn-after-user-threatens-to-switch-to-chatgpt-569479-2026-11-26",
+      "title": "I replaced Samsung Calendar with Google Calendar on my Galaxy because it plays well with Gemini",
+      "link": "https://www.androidpolice.com/replaced-samsung-calendar-with-google-calendar-gemini-works-better/",
       "date": "2026-11-26",
-      "summary": "A repeated question about a fast-food brand turned into an unusual exchange with Google's AI chatbot. Business Today tested whether Gemini could ..."
+      "summary": "Gemini works with Samsung Calendar on Galaxy phones, but it can't edit everything. Here's what I tested and why I moved to Google Calendar."
     },
     {
-      "title": "I use these 5 Gemini prompts to make Google Maps even more powerful - Yahoo Tech",
-      "link": "https://tech.yahoo.com/ai/gemini/articles/5-gemini-prompts-google-maps-130210811.html",
+      "title": "Gemini Tabs in Chrome Were Eating Your RAM, and Google Says the Fix Is Finally Live",
+      "link": "https://www.androidheadlines.com/2026/11/google-fixes-gemini-chrome-ram-hogging-bug.html",
       "date": "2026-11-26",
-      "summary": "Google Maps pin and map icon integrated with the Gemini logo and a navigation banner. Lucas Gouveia / Android Police."
+      "summary": "Google Support confirmed on Reddit that it fixed the bug causing high RAM usage by Gemini tabs on its Chrome browser."
     },
     {
-      "title": "How Google Duplex Powers Gemini's Business Calls - eWeek",
-      "link": "https://www.eweek.com/news/google-duplex-gemini-business-calls/",
+      "title": "Google Pitches Gemini as Project Summary Tool - Wisevoter",
+      "link": "https://wisevoter.com/world/2026/11/26/google-gemini-project-summary-tool",
       "date": "2026-11-26",
-      "summary": "Illustration of Google Gemini calling to book an appointment while a bicycle shop worker suggests Thursday. An AI assistant (left) handles a phone ..."
+      "summary": "Google Cloud published a promotional post on November 25, 2026 positioning Gemini as a tool to summarize project documents, emails and chats."
     },
     {
-      "title": "I want to use Google's latest Gemini models, but choosing one is homework - Android Police",
-      "link": "https://www.androidpolice.com/i-want-use-googles-gemini-models-but-choosing-one-homework/",
+      "title": "Google's AI Mode Can Now Read Your Wallet, With Drive Coming Next - gHacks Tech News",
+      "link": "https://www.ghacks.net/2026/11/26/googles-ai-mode-can-now-read-your-wallet-with-drive-coming-next/",
       "date": "2026-11-26",
-      "summary": "Trying to make sense of Google's periodic-table naming convention. Argon, Neon, Carbon, and Hydrogen are all part of Google's Gemini 4 family. But ..."
+      "summary": "... Google Drive to add context to answers and suggest ideas. Gemini and AI Mode Share Context. Google is also linking its two AI products more closely."
     },
     {
-      "title": "Google on X: \"Learn more about Gemini 4 Neon ↓ https://t.co/McYiyk9qlN\" / X",
-      "link": "https://x.com/Google/status/2125667316884975738",
+      "title": "76% of Australians are struggling to tell apart real and AI content – new report",
+      "link": "https://theconversation.com/76-of-australians-are-struggling-to-tell-apart-real-and-ai-content-new-report-296952",
       "date": "2026-11-26",
-      "summary": "Yes, this is a real Google Sheet Using /swarm in @antigravity, Gemini 4 Neon turned one photo into a 100,000-cell grid with zero embedded ..."
+      "summary": "... Google Gemini (24%) and Claude (17%). Our survey also shows people are particularly distrusting of politicians and social media companies that use ..."
     },
     {
-      "title": "バーチャルシンガー『MEIKO』の通知ボイス、日英2言語で配信販売スタート！ - PR TIMES",
-      "link": "https://prtimes.jp/main/html/rd/p/000000733.000052709.html",
-      "date": "2026-11-25",
-      "summary": "※「VOCALOID（ボーカロイド）」および「ボカロ」はヤマハ株式会社の登録商標です。 ＜会社概要＞. 会社名：クリプトン・フューチャー・メディア株式会社代表 ..."
-    },
-    {
-      "title": "ドワンゴ主催ボカロイベント、権利侵害リスクのある応募作品は褒賞対象外に 前回ニンテンドー ...",
-      "link": "https://news.yahoo.co.jp/articles/09fe60e578709da03b817162557771f15b8d3bd2",
-      "date": "2026-11-25",
-      "summary": "ボカロ文化の祭典「The VOCALOID Collection」（略称・ボカコレ）の運営が11月24日、次回開催に向けた応募作品の取り扱いに関する運用の見直しを発表した。"
-    },
-    {
-      "title": "初代パッケージの初音ミクを収納ケースに！タニタ 電子体温計 BT-475「初音ミクモデル」 - Dtimes",
-      "link": "https://dtimes.jp/post-1479874/",
-      "date": "2026-11-25",
-      "summary": "タニタの電子体温計 BT-475「初音ミクモデル」は、本体に初音ミクのロゴ、収納ケースに初代パッケージのイラストを配置。大型バックライト表示と約15秒の ..."
+      "title": "Australian teachers lead the way: launching the Google AI Educator Series",
+      "link": "https://blog.google/intl/en-au/company-news/outreach-initiatives/google-ai-educator-series/",
+      "date": "2026-11-26",
+      "summary": "With a few clicks and prompts, Gemini can turn text heavy materials into an illustrated picture book in Google Slides, complete with worksheets. A ..."
     }
   ]
 }
